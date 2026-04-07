@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 560" width="1280" height="560" role="img" aria-label="PromptGnome — catches sensitive info before it reaches the AI">
+  <defs>
+    <!-- Background -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#060a14"/>
+      <stop offset=".55" stop-color="#0a1020"/>
+      <stop offset="1" stop-color="#0c1220"/>
+    </linearGradient>
+    <radialGradient id="glowL" cx=".18" cy=".35" r=".55">
+      <stop offset="0" stop-color="#00e5a0" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#00e5a0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowR" cx=".82" cy=".75" r=".55">
+      <stop offset="0" stop-color="#ffb347" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#ffb347" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" x="0" y="0" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="rgba(0,229,160,.05)" stroke-width="1"/>
+    </pattern>
+
+    <!-- Brand text gradient -->
+    <linearGradient id="brandText" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00e5a0"/>
+      <stop offset=".55" stop-color="#4de8c0"/>
+      <stop offset="1" stop-color="#ffb347"/>
+    </linearGradient>
+
+    <!-- Gnome hat -->
+    <linearGradient id="hat" x1="256" y1="40" x2="256" y2="296" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00e5a0"/>
+      <stop offset=".6" stop-color="#009968"/>
+      <stop offset="1" stop-color="#006644"/>
+    </linearGradient>
+    <radialGradient id="markGlow" cx=".5" cy=".5" r=".7">
+      <stop offset="0" stop-color="#00e5a0" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#00e5a0" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Provider gradients -->
+    <linearGradient id="gemGrad" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1a73e8"/>
+      <stop offset=".35" stop-color="#6c47c4"/>
+      <stop offset=".65" stop-color="#c5221f"/>
+      <stop offset="1" stop-color="#e8710a"/>
+    </linearGradient>
+
+    <!-- Reusable chip background -->
+    <linearGradient id="chipBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0e1628"/>
+      <stop offset="1" stop-color="#0a1120"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ============ Background ============ -->
+  <rect width="1280" height="560" rx="28" fill="url(#bg)"/>
+  <rect width="1280" height="560" rx="28" fill="url(#grid)"/>
+  <rect width="1280" height="560" rx="28" fill="url(#glowL)"/>
+  <rect width="1280" height="560" rx="28" fill="url(#glowR)"/>
+  <rect x="1" y="1" width="1278" height="558" rx="27" fill="none" stroke="rgba(0,229,160,.18)"/>
+
+  <!-- ============ Hero row ============ -->
+  <!-- Mark glow -->
+  <circle cx="220" cy="220" r="200" fill="url(#markGlow)"/>
+
+  <!-- Gnome mark -->
+  <g transform="translate(80,80) scale(0.55)">
+    <rect width="512" height="512" rx="112" fill="#0c1220" stroke="rgba(0,229,160,.35)" stroke-width="4"/>
+    <path d="M256 40L128 296h256L256 40z" fill="url(#hat)"/>
+    <rect x="128" y="284" width="256" height="20" rx="10" fill="#0e1628" stroke="rgba(0,229,160,.3)" stroke-width="4"/>
+    <path d="M256 104l-48 28v48c0 32 20 56 48 72 28-16 48-40 48-72v-48l-48-28z" fill="none" stroke="#ffb347" stroke-width="8" opacity=".75"/>
+    <path d="M256 136l-28 16v28c0 20 12 32 28 40 16-8 28-20 28-40v-28l-28-16z" fill="rgba(255,179,71,.06)"/>
+    <rect x="240" y="168" width="32" height="24" rx="6" fill="none" stroke="#ffb347" stroke-width="4.8" opacity=".8"/>
+    <path d="M248 168v-10a8 8 0 0 1 16 0v10" fill="none" stroke="#ffb347" stroke-width="4.8" opacity=".8"/>
+    <circle cx="256" cy="380" r="88" fill="#0e1628" stroke="#00e5a0" stroke-width="6" opacity=".85"/>
+    <circle cx="224" cy="364" r="20" fill="#00e5a0"/>
+    <circle cx="288" cy="364" r="20" fill="#00e5a0"/>
+    <circle cx="230" cy="358" r="7.2" fill="#fff" opacity=".55"/>
+    <circle cx="294" cy="358" r="7.2" fill="#fff" opacity=".55"/>
+    <ellipse cx="256" cy="392" rx="12" ry="10" fill="#162040" stroke="rgba(0,229,160,.18)" stroke-width="4"/>
+    <path d="M228 416c12 16 44 16 56 0" stroke="#00e5a0" stroke-width="7.2" stroke-linecap="round" fill="none" opacity=".7"/>
+  </g>
+
+  <!-- Eyebrow -->
+  <g transform="translate(440,128)">
+    <rect width="232" height="34" rx="17" fill="rgba(0,229,160,.08)" stroke="rgba(0,229,160,.4)"/>
+    <circle cx="20" cy="17" r="4" fill="#00e5a0"/>
+    <text x="34" y="22" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" font-weight="600" fill="#00e5a0" letter-spacing=".5">PRIVACY · LOCAL · OPEN</text>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="440" y="248" font-family="'Bricolage Grotesque','Space Grotesk',system-ui,sans-serif" font-size="96" font-weight="800" fill="url(#brandText)" letter-spacing="-3">PromptGnome</text>
+
+  <!-- Tagline -->
+  <text x="442" y="298" font-family="'DM Sans',system-ui,sans-serif" font-size="26" font-weight="500" fill="#e8edf5">Catches sensitive info before it reaches the AI.</text>
+  <text x="442" y="328" font-family="'DM Sans',system-ui,sans-serif" font-size="18" font-weight="400" fill="#8a94a8">Detection runs entirely in your browser. Your prompts never leave your machine.</text>
+
+  <!-- Feature pills -->
+  <g font-family="'JetBrains Mono',ui-monospace,monospace" font-size="14" font-weight="600">
+    <g transform="translate(442,360)">
+      <rect width="148" height="36" rx="18" fill="rgba(0,229,160,.1)" stroke="rgba(0,229,160,.45)"/>
+      <circle cx="20" cy="18" r="5" fill="#00e5a0"/>
+      <text x="34" y="23" fill="#00e5a0">100% local</text>
+    </g>
+    <g transform="translate(602,360)">
+      <rect width="172" height="36" rx="18" fill="rgba(255,179,71,.1)" stroke="rgba(255,179,71,.5)"/>
+      <circle cx="20" cy="18" r="5" fill="#ffb347"/>
+      <text x="34" y="23" fill="#ffb347">65+ PII categories</text>
+    </g>
+    <g transform="translate(786,360)">
+      <rect width="148" height="36" rx="18" fill="rgba(232,237,245,.05)" stroke="rgba(232,237,245,.25)"/>
+      <circle cx="20" cy="18" r="5" fill="#e8edf5"/>
+      <text x="34" y="23" fill="#e8edf5">sub-10ms scan</text>
+    </g>
+  </g>
+
+  <!-- ============ Providers row ============ -->
+  <line x1="80" y1="448" x2="1200" y2="448" stroke="rgba(0,229,160,.15)" stroke-dasharray="2 6"/>
+  <text x="80" y="438" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11" font-weight="600" fill="#5a6478" letter-spacing="2">PROTECTS YOU ON</text>
+
+  <!-- 8 chips · 130 wide · 16 gap · centered around 640. total: 8*130 + 7*16 = 1152, start = (1280-1152)/2 = 64 -->
+  <g font-family="'DM Sans',system-ui,sans-serif" font-size="14" font-weight="600" fill="#e8edf5">
+
+    <!-- ChatGPT -->
+    <g transform="translate(64,470)">
+      <rect width="130" height="64" rx="14" fill="url(#chipBg)" stroke="rgba(16,163,127,.45)"/>
+      <g transform="translate(16,20) scale(1)">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" fill="#10a37f"/></svg>
+      </g>
+      <text x="50" y="40">ChatGPT</text>
+    </g>
+
+    <!-- Claude -->
+    <g transform="translate(210,470)">
+      <rect width="130" height="64" rx="14" fill="url(#chipBg)" stroke="rgba(217,119,87,.45)"/>
+      <g transform="translate(16,20)"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z" fill="#d97757"/></svg></g>
+      <text x="50" y="40">Claude</text>
+    </g>
+
+    <!-- Gemini -->
+    <g transform="translate(356,470)">
+      <rect width="130" height="64" rx="14" fill="url(#chipBg)" stroke="rgba(108,71,196,.5)"/>
+      <g transform="translate(16,20)"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="url(#gemGrad)"/></svg></g>
+      <text x="50" y="40">Gemini</text>
+    </g>
+
+    <!-- DeepSeek -->
+    <g transform="translate(502,470)">
+      <rect width="130" height="64" rx="14" fill="url(#chipBg)" stroke="rgba(77,107,254,.5)"/>
+      <g transform="translate(16,20)"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M23.749 4.88c-.256-.12-.366.108-.514.225-.05.038-.094.087-.136.131-.373.386-.808.64-1.373.608-.83-.044-1.538.21-2.164.823-.133-.758-.575-1.21-1.247-1.502-.352-.15-.709-.3-.954-.63-.173-.232-.22-.492-.307-.749-.053-.154-.108-.312-.293-.34-.2-.03-.277.133-.355.27-.313.551-.434 1.164-.423 1.782.028 1.39.635 2.498 1.84 3.288.136.09.171.181.13.313-.084.27-.18.535-.269.806-.054.174-.136.212-.327.135a5.5 5.3 0 0 1-1.737-1.142c-.857-.803-1.63-1.69-2.598-2.382a11 11 0 0 0-.687-.456c-.986-.928.13-1.69.387-1.78.27-.094.093-.418-.78-.415-.87.004-1.67.287-2.684.663-.149.057-.305.099-.466.131a9.65 9.34 0 0 0-2.883-.097c-1.884.205-3.391 1.07-4.498 2.542C.08 8.875-.23 10.888.15 12.99c.403 2.211 1.569 4.046 3.36 5.478 1.86 1.484 4 2.212 6.44 2.072 1.481-.082 3.133-.274 4.994-1.8.47.224.963.314 1.78.383.63.057 1.236-.03 1.706-.124.735-.15.684-.81.418-.932-2.156-.972-1.682-.576-2.113-.897 1.095-1.255 2.747-2.56 3.392-6.784.05-.337.007-.547 0-.82-.004-.165.035-.23.23-.248a4.13 4 0 0 0 1.545-.46c1.397-.74 1.96-1.953 2.092-3.408.02-.222-.004-.453-.245-.57" fill="#4D6BFE"/></svg></g>
+      <text x="50" y="40">DeepSeek</text>
+    </g>
+
+    <!-- Perplexity -->
+    <g transform="translate(648,470)">
+      <rect width="130" height="64" rx="14" fill="url(#chipBg)" stroke="rgba(31,184,205,.5)"/>
+      <g transform="translate(16,20)"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M22.3977 7.0896h-2.3106V.0676l-7.5094 6.3542V.1577h-1.1554v6.1966L4.4904 0v7.0896H1.6023v10.3976h2.8882V24l6.932-6.3591v6.2005h1.1554v-6.0469l6.9318 6.1807v-6.4879h2.8882V7.0896zm-3.4657-4.531v4.531h-5.355l5.355-4.531zm-13.2862.0676 4.8691 4.4634H5.6458V2.6262zM2.7576 16.332V8.245h7.8476l-6.1149 6.1147v1.9723H2.7576zm2.8882 5.0404v-3.8852h.0001v-2.6488l5.7763-5.7764v7.0111l-5.7764 5.2993zm12.7086.0248-5.7766-5.1509V9.0618l5.7766 5.7766v6.5588zm2.8882-5.0652h-1.733v-1.9723L13.3948 8.245h7.8478v8.087z" fill="#1FB8CD"/></svg></g>
+      <text x="50" y="40">Perplexity</text>
+    </g>
+
+    <!-- Grok -->
+    <g transform="translate(794,470)">
+      <rect width="130" height="64" rx="14" fill="url(#chipBg)" stroke="rgba(231,231,231,.4)"/>
+      <g transform="translate(16,20)"><svg width="24" height="24" viewBox="0 0 256 246"><path d="M63.83 56.843c27.469-27.48 67.635-34.865 101.712-21.87l2.314.917c7.645 2.844 14.309 6.89 19.507 10.651l-28.857 13.342c-26.869-11.286-57.649-3.609-76.435 15.2c-25.405 25.414-30.539 69.484-.764 97.96L0 245.764c4.296-5.923 9.457-11.573 14.75-17.178l5.815-6.13 2.608-2.774c15.53-16.655 28.81-33.77 20.496-56.709l-.766-1.98c-14.592-35.497-6.094-77.096 20.928-104.15m156.956-21.587L256 0l-10.128 14.069c-21.094 29.716-30.456 48.424-21.11 88.659l-.065-.065c7.23 30.728-.503 64.803-25.472 89.802c-31.478 31.538-81.852 38.558-123.336 10.17l28.923-13.407c26.476 10.41 55.442 5.839 76.26-15.003c20.818-20.844 25.493-51.2 15.03-76.462c-1.989-4.79-7.952-5.992-12.125-2.909L98.87 157.755 220.786 35.147z" fill="#e7e7e7"/></svg></g>
+      <text x="50" y="40">Grok</text>
+    </g>
+
+    <!-- Copilot -->
+    <g transform="translate(940,470)">
+      <rect width="130" height="64" rx="14" fill="url(#chipBg)" stroke="rgba(0,120,212,.5)"/>
+      <g transform="translate(16,20)"><svg width="24" height="24" viewBox="0 0 48 48"><path d="M28.751 6.73h-13.85c-3.96 0-6.335 5.225-7.912 10.46c-1.89 6.193-4.332 14.485 2.764 14.485h5.985a4 4 0 0 0 3.847-2.906c1.045-3.639 2.86-9.974 4.293-14.82c.732-2.45 1.33-4.559 2.261-5.87a3.13 3.13 0 0 1 2.612-1.349" fill="none" stroke="#0078d4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.252 41.27h13.85c3.961 0 6.336-5.225 7.913-10.46c1.88-6.202 4.331-14.485-2.764-14.485h-5.985a4 4 0 0 0-3.847 2.897c-1.045 3.639-2.86 9.974-4.294 14.819c-.731 2.46-1.33 4.56-2.26 5.88a3.13 3.13 0 0 1-2.613 1.349" fill="none" stroke="#0078d4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></g>
+      <text x="50" y="40">Copilot</text>
+    </g>
+
+    <!-- Meta AI -->
+    <g transform="translate(1086,470)">
+      <rect width="130" height="64" rx="14" fill="url(#chipBg)" stroke="rgba(4,103,223,.5)"/>
+      <g transform="translate(16,20)"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z" fill="#0467DF"/></svg></g>
+      <text x="50" y="40">Meta AI</text>
+    </g>
+  </g>
+</svg>

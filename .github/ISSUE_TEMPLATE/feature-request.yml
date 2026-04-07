@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest a new capability or improvement.
+title: "[Feature]: "
+labels: ["feature-request", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. Telling us about the underlying problem you are trying to solve is more helpful than telling us about a specific solution. We want to understand the need first.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the situation, not the feature.
+    validations:
+      required: true
+
+  - type: textarea
+    id: who-benefits
+    attributes:
+      label: Who else would benefit from this?
+      description: Just you, a specific group, everyone? Whatever you can share helps us prioritize.
+
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Would you expect this in the free or Pro tier?
+      options:
+        - Free
+        - Pro
+        - Either
+        - I am not sure
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you have considered
+      description: Other tools, workarounds, or different approaches.

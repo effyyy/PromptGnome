@@ -1,0 +1,77 @@
+name: False positive
+description: PromptGnome flagged something that is not actually sensitive.
+title: "[False positive]: "
+labels: ["false-positive", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Important:** please replace any real personal data with obviously fake equivalents before submitting. Examples of safe synthetic data:
+
+        - Emails: `jane@example.com`, `test@example.org`
+        - Phone numbers: `555-0100`, `+1-555-0123`
+        - Names: `Jane Testperson`, `John Doe`
+        - SSNs: use `123-45-6789` style placeholders only
+
+        Reports that contain real personal data will be edited or deleted.
+
+  - type: dropdown
+    id: pii-type
+    attributes:
+      label: Which PII type was flagged?
+      options:
+        - Email
+        - Social Security Number
+        - Credit card number
+        - US phone number
+        - International phone number
+        - IPv4 address
+        - IPv6 address
+        - AWS access key
+        - AWS secret key
+        - GitHub token
+        - Stripe API key
+        - Generic API key or secret
+        - IBAN
+        - US passport number
+        - Driver's license number
+        - ZIP code
+        - Date of birth
+        - Street address
+        - Person name
+        - Organization
+        - Location
+        - Medical term
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Synthetic example that reproduces the issue
+      description: Please use only fake data here.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why-wrong
+    attributes:
+      label: Why do you believe this is incorrect?
+    validations:
+      required: true
+
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: no-pii
+    attributes:
+      label: Confirmation
+      options:
+        - label: The example above contains no real personal data.
+          required: true

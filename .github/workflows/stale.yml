@@ -1,0 +1,24 @@
+name: Stale issues
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          only-issue-labels: needs-info
+          exempt-issue-labels: provider-breakage,confirmed,priority:high
+          days-before-issue-stale: 30
+          days-before-issue-close: 15
+          stale-issue-message: "This issue has been waiting on more information for 30 days. If you are still seeing this problem, please reply with the requested details and we will reopen the conversation. Otherwise it will be closed in 15 days. Thanks for understanding."
+          close-issue-message: "Closing this for now since we have not heard back. Please feel free to comment if you would like to reopen it."
+          days-before-pr-stale: -1
+          days-before-pr-close: -1

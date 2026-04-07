@@ -1,0 +1,79 @@
+name: Bug report
+description: Something is not working the way you expect.
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. A few quick reminders before you continue:
+
+        - Please do not include real personal data in any field below. Use synthetic examples only.
+        - The more specific you can be about steps to reproduce, the faster we can help.
+
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version
+      description: You can find this in the side panel or in your browser's extension manager.
+      placeholder: "e.g. 0.4.2"
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: "e.g. Chrome 132.0.6834.84"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "e.g. Windows 11, macOS 14.4, Ubuntu 24.04"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the actual behavior you observed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps if possible.
+      placeholder: |
+        1. Open ChatGPT
+        2. Type a message containing a synthetic email
+        3. Click send
+        4. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console errors (optional)
+      description: Open DevTools, switch to the Console tab, and paste any errors that look related.
+
+  - type: checkboxes
+    id: no-pii
+    attributes:
+      label: Confirmation
+      options:
+        - label: I confirm this report contains no real personal data.
+          required: true

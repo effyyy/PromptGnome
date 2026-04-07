@@ -1,0 +1,96 @@
+name: Provider breakage
+description: A supported AI chatbot has stopped working with PromptGnome.
+title: "[Provider broken]: "
+labels: ["provider-breakage", "priority:high", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        AI provider APIs change without notice. Reports like this are how we find out fast. Thank you for taking the time.
+
+        Please do not include real personal data in any field below.
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Which provider is affected?
+      options:
+        - ChatGPT
+        - Claude
+        - Gemini
+        - DeepSeek
+        - Perplexity
+        - Grok
+        - Microsoft Copilot
+        - Meta AI
+    validations:
+      required: true
+
+  - type: dropdown
+    id: symptom
+    attributes:
+      label: What stopped working?
+      options:
+        - Detection is not firing at all
+        - Warning overlay is not appearing
+        - Auto-anonymize is not running
+        - Re-hydration is broken
+        - Extension crashes on this provider
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: first-noticed
+    attributes:
+      label: When did you first notice this?
+      placeholder: "e.g. 2026-04-05 morning UTC"
+    validations:
+      required: true
+
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Describe the behavior
+      description: What did you try, and what did you observe?
+    validations:
+      required: true
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshot or screen recording (optional)
+      description: A link to an image or short clip is often the fastest way for us to understand the issue.
+
+  - type: dropdown
+    id: previously-worked
+    attributes:
+      label: Did this work before?
+      options:
+        - "Yes, it worked recently and just stopped"
+        - "No, it has never worked for me on this provider"
+        - "I am not sure"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: no-pii
+    attributes:
+      label: Confirmation
+      options:
+        - label: I confirm this report contains no real personal data.
+          required: true
