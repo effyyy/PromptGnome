@@ -1,0 +1,34 @@
+{
+  "chatgpt": {
+    "representativeEndpoints": ["/backend-api/conversation"],
+    "landingUrl": "https://chatgpt.com"
+  },
+  "claude": {
+    "representativeEndpoints": ["/completion"],
+    "landingUrl": "https://claude.ai"
+  },
+  "gemini": {
+    "representativeEndpoints": ["StreamGenerate"],
+    "landingUrl": "https://gemini.google.com"
+  },
+  "deepseek": {
+    "representativeEndpoints": ["/api/v0/chat/completion"],
+    "landingUrl": "https://chat.deepseek.com"
+  },
+  "perplexity": {
+    "representativeEndpoints": ["/rest/sse/perplexity_ask"],
+    "landingUrl": "https://www.perplexity.ai"
+  },
+  "grok": {
+    "representativeEndpoints": ["/rest/app-chat/conversations"],
+    "landingUrl": "https://grok.com"
+  },
+  "copilot": {
+    "representativeEndpoints": ["/c/api/chat"],
+    "landingUrl": "https://copilot.microsoft.com"
+  },
+  "meta-ai": {
+    "representativeEndpoints": ["/api/graphql"],
+    "landingUrl": "https://www.meta.ai"
+  }
+}

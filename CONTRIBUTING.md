@@ -1,36 +1,90 @@
 # Contributing to PromptGnome
 
-Thank you for taking the time to help improve PromptGnome. This project exists because people like you care about keeping personal information private when using AI tools, and your feedback genuinely shapes where it goes next.
+Thanks for your interest in contributing. Please read this entire document
+before opening a pull request.
 
-## About this repository
+## Code of Conduct
 
-PromptGnome's source code is kept in a private repository for now. This is a practical choice rather than a permanent one. We want to get the detection engine and provider adapters stable before opening them up, and we are still working through what a sustainable open contribution process would look like for a privacy-sensitive tool. Open-sourcing parts of the project is something we are seriously considering, and community feedback will play a real role in that decision.
+This project follows the Contributor Covenant. See [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md).
 
-In the meantime, this public repository is where you can:
+## Contributor License Agreement (CLA)
 
-- Read the documentation, privacy policy, and threat model
-- File bug reports and feature requests
-- Report broken provider integrations
-- Flag detection issues (false positives and false negatives)
-- Report security vulnerabilities privately
+All non-trivial contributions require a signed Contributor License Agreement
+before they can be merged. The CLA Assistant bot will automatically prompt
+you to sign on your first pull request — it is a one-click process.
 
-## A note on pull requests
+The CLA assigns the project owner the right to relicense your contribution,
+which is what enables the dual-license model (PolyForm Noncommercial for
+public use, commercial licenses available on request). Without a CLA, we
+cannot accept contributions.
 
-Because the source code lives elsewhere, we are not able to accept pull requests against this repository at the moment. If you spot a typo or an error in the documentation, please open an issue and we will fix it quickly. We appreciate the catch either way.
+## Building locally
 
-## Filing a useful issue
+Prerequisites:
+- Node.js (version pinned in `extension/.nvmrc`)
+- pnpm (corepack-managed; run `corepack enable` if needed)
 
-The issue templates will guide you through what we need. A few small things that help us help you faster:
+```bash
+cd extension
+pnpm install --frozen-lockfile
+pnpm dev          # development build with hot reload
+pnpm build        # production build
+pnpm test         # full test suite
+pnpm typecheck    # TypeScript strict-mode check
+```
 
-- Include your extension version, browser, and operating system.
-- If you can, describe what you expected to happen and what actually happened.
-- If your report involves example text, please use synthetic data only. Never paste real personal information into an issue.
-- One issue per topic is easier to track than several mixed together.
+Loading the unpacked extension:
+1. Run `pnpm build` in `extension/`.
+2. In Chrome, open `chrome://extensions` and enable Developer mode.
+3. Click **Load unpacked** and select `extension/build/chrome-mv3-prod`.
 
-## Code of conduct
+## Reproducible builds
 
-By participating in this repository you agree to follow our [Code of Conduct](CODE_OF_CONDUCT.md). In short: be kind, be patient, and assume good faith.
+Every release artifact published to a browser store is built by GitHub
+Actions from a tagged commit in this repository. To verify a release:
 
-## Security issues
+1. Check out the tag: `git checkout v<version>`
+2. Build: `cd extension && pnpm install --frozen-lockfile && pnpm build`
+3. Compare hashes: `sha256sum extension/build/chrome-mv3-prod/manifest.json`
+   against the same file from the GitHub Release artifact.
 
-Please do not file security vulnerabilities as public issues. See [SECURITY.md](SECURITY.md) for the private disclosure process.
+The `release.yml` workflow attaches a `SHA256SUMS` file to every Release.
+
+## Code standards
+
+- TypeScript strict mode, zero `any`, zero non-null assertions.
+- Every exported function gets a JSDoc block with `@param`, `@returns`,
+  `@throws`.
+- Tests live under `extension/tests/` mirroring the `extension/src/` layout.
+- Synthetic PII only — never use real names, real SSNs, or real emails in
+  fixtures or tests. Use obvious placeholders like `Jane Testperson`,
+  `123-45-6789`, `test@example.com`.
+- Coverage targets: 85% for `detection/`, `anonymization/`, `rehydration/`;
+  70% overall.
+
+## Pull request process
+
+1. Branch from `develop`, not `master`.
+2. Write tests first (TDD). New code without tests will be asked to add them.
+3. Run `pnpm typecheck && pnpm test && pnpm build` before pushing.
+4. Open the PR against `develop`. CI will run automatically.
+5. Address review feedback.
+6. A maintainer will merge when checks pass and the CLA is signed.
+
+## What belongs here vs the Pro tier
+
+This repository is the **free tier** of PromptGnome. The free tier:
+- Runs entirely on-device
+- Makes zero network calls to PromptGnome-controlled servers
+- Includes regex detection, local NER (offscreen document), warning UI,
+  auto-anonymization, and re-hydration
+
+The Pro tier (closed-source, in development) adds backend-assisted NER,
+file and image scanning, and team features. Pro source code is not part of
+this repository, and pull requests adding Pro-style features (anything that
+POSTs to a PromptGnome backend) will be closed. If you have an idea for a
+Pro feature, open a discussion instead.
+
+## Contact
+
+For commercial licensing or general questions: **contact@promptgnome.com**.

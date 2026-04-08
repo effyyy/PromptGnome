@@ -1,0 +1,45 @@
+/**
+ * CSS Custom Highlight API styles for real-time PII detection.
+ *
+ * These rules target named highlights registered via CSS.highlights.set().
+ * All PII types use a uniform danger-red style matching the landing page
+ * demo: red background tint, red text, and solid red underline.
+ *
+ * Architecture layer: Presentation for highlighting/
+ * Used by: highlight-renderer.ts via highlighter.ts (injected into document head)
+ *
+ * Note: ::highlight() pseudo-elements only support a limited set of
+ * properties: color, background-color, text-decoration, text-shadow,
+ * -webkit-text-stroke-color, -webkit-text-fill-color.
+ */
+
+/* === Uniform danger-red highlight for all PII types === */
+/* Matches the landing page demo: red bg tint + solid red underline */
+
+::highlight(pii-email),
+::highlight(pii-ssn),
+::highlight(pii-credit-card),
+::highlight(pii-phone),
+::highlight(pii-ip),
+::highlight(pii-api-key),
+::highlight(pii-iban),
+::highlight(pii-passport),
+::highlight(pii-license),
+::highlight(pii-zip),
+::highlight(pii-dob),
+::highlight(pii-address),
+::highlight(pii-name),
+::highlight(pii-organization),
+::highlight(pii-location),
+::highlight(pii-medical),
+::highlight(pii-generic) {
+  background-color: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+  /* Some editors (e.g. Grok / x.com) paint text via -webkit-text-fill-color
+     which overrides plain `color` on ::highlight() — set both so the red
+     foreground is actually visible. */
+  -webkit-text-fill-color: #ff6b6b;
+  -webkit-text-stroke-color: #ff6b6b;
+  text-decoration: underline solid rgba(255, 107, 107, 0.8);
+  text-decoration-thickness: 2px;
+}

@@ -1,0 +1,22 @@
+title = "PromptGnome gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allowed test fixtures and synthetic data"
+paths = [
+  '''extension/tests/.*''',
+  '''extension/benchmarks/.*''',
+  '''extension/src/detection/regex-engine-credentials\.ts''',
+]
+regexes = [
+  '''test@example\.com''',
+  '''jane@example\.com''',
+  '''john@example\.com''',
+  '''123-45-6789''',
+  '''Jane Testperson''',
+  '''John Testperson''',
+  '''Jane Doe''',
+  '''John Doe''',
+]

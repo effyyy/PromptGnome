@@ -1,0 +1,154 @@
+/**
+ * Content-script-safe stylesheet.
+ *
+ * Unlike style.css, this file does NOT include @tailwind base (Preflight).
+ * Preflight resets global element styles (margins, box-sizing, headings, lists,
+ * button cursors, etc.) which breaks AI chatbot UIs like ChatGPT, Claude, and
+ * Gemini. This file provides only the design tokens and Tailwind utilities
+ * scoped to extension containers.
+ *
+ * USE THIS in content scripts (overlay.tsx, onboarding/index.tsx).
+ * USE style.css in isolated pages (popup, sidepanel) where Preflight is safe.
+ */
+
+/*
+ * Design tokens — scoped to extension containers only.
+ * NEVER use :root here — that would pollute the host page's CSS scope.
+ */
+#pii-shield-overlay-root,
+.pii-shield-root {
+  --bg-void: #060a14;
+  --bg-surface: rgba(14,22,40,0.65);
+  --bg-surface-light: rgba(20,30,55,0.8);
+  --text-primary: #e8edf5;
+  --text-secondary: #8a94a8;
+  --text-muted: #5a6478;
+  --danger: #ff6b6b;
+  --danger-soft: rgba(255,107,107,0.15);
+  --danger-text: #fca5a5;
+  --success: #4ade80;
+  --success-soft: rgba(34,197,94,0.1);
+  --warning: #fbbf24;
+  --pro-accent: #ffb347;
+}
+
+/*
+ * Scoped CSS reset — essential Preflight rules ONLY within extension elements.
+ * This prevents Tailwind's border and box-sizing utilities from breaking
+ * without resetting the entire host page.
+ */
+#pii-shield-overlay-root *,
+#pii-shield-overlay-root *::before,
+#pii-shield-overlay-root *::after,
+.pii-shield-root *,
+.pii-shield-root *::before,
+.pii-shield-root *::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: currentColor;
+}
+
+/* Animation keyframes */
+@keyframes scan-pulse {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -900; }
+}
+@keyframes scan-pulse-rev {
+  0% { stroke-dashoffset: -900; }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes glow-drift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(10px, 8px); }
+}
+@keyframes node-breathe {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+@keyframes shield-expand {
+  0% { width: 20px; height: 20px; opacity: 0.6; border-color: rgba(0,229,160,0.3); }
+  70% { opacity: 0.1; }
+  100% { width: 500px; height: 500px; opacity: 0; border-color: rgba(0,229,160,0.05); }
+}
+@keyframes icon-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(0,229,160,0.15); }
+  50% { box-shadow: 0 0 20px rgba(0,229,160,0.3), inset 0 0 8px rgba(0,229,160,0.08); }
+}
+@keyframes ring-pulse {
+  0%, 100% { r: 4; opacity: 0.3; }
+  50% { r: 6; opacity: 0.6; }
+}
+@keyframes modal-enter {
+  0% { opacity: 0; transform: translateY(16px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes backdrop-enter {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes badge-pop {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Warning panel glow and gradient animations */
+@keyframes warning-glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 179, 71, 0.08), 0 8px 32px rgba(0, 0, 0, 0.4); }
+  50% { box-shadow: 0 0 36px rgba(255, 179, 71, 0.16), 0 0 60px rgba(255, 179, 71, 0.06), 0 8px 32px rgba(0, 0, 0, 0.5); }
+}
+@keyframes gradient-border-rotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes modal-exit {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(16px) scale(0.97); }
+}
+@keyframes backdrop-exit {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes close-btn-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 107, 107, 0); }
+  50% { box-shadow: 0 0 12px rgba(255, 107, 107, 0.3); }
+}
+
+/* Scanning indicator animations */
+@keyframes pii-scan-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes pii-dot-pulse {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+/* Reduced motion — scoped to extension containers only */
+@media (prefers-reduced-motion: reduce) {
+  #pii-shield-overlay-root *,
+  #pii-shield-overlay-root *::before,
+  #pii-shield-overlay-root *::after,
+  .pii-shield-root *,
+  .pii-shield-root *::before,
+  .pii-shield-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * NO @tailwind base — this is intentional.
+ * Tailwind Preflight resets margins, padding, font sizes, heading styles,
+ * list styles, button cursors, and box-sizing on ALL elements in the page.
+ * Including it here would break ChatGPT, Claude, Gemini, and every other
+ * AI chat UI that the extension runs on.
+ */
+@tailwind components;
+@tailwind utilities;

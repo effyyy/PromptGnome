@@ -1,55 +1,41 @@
-# Security policy
+# Security Policy
 
-Thank you for taking the time to look for security issues in PromptGnome. PromptGnome is a privacy tool, so security and correctness matter to us a great deal. We will work with you in good faith to investigate, fix, and disclose any vulnerabilities you find.
+## Supported versions
+
+The latest published release on the Chrome Web Store, Firefox Add-ons, and
+Edge Add-ons is the only supported version.
 
 ## Reporting a vulnerability
 
-**Please do not file security issues as public GitHub issues.**
+**Please do not open public GitHub issues for security vulnerabilities.**
 
-The preferred way to report a vulnerability is via GitHub's Private Vulnerability Reporting:
+Use GitHub's private vulnerability reporting feature for this repository:
+1. Navigate to the **Security** tab of this repository.
+2. Click **Report a vulnerability**.
+3. Provide as much detail as you can: affected version, reproduction steps,
+   impact assessment.
 
-> https://github.com/effyyy/PromptGnome/security/advisories/new
+Alternatively, email **contact@promptgnome.com** with the subject line
+`SECURITY: <short description>`.
 
-If you cannot use GitHub PVR for any reason, you can email us at **contact@promptgnome.com** with the subject line "Security report".
+## Disclosure timeline
 
-When reporting, please include:
-
-- A clear description of the issue
-- Steps to reproduce it (or a proof of concept)
-- The impact you believe it has
-- The extension version, browser, and operating system you tested on
-- Any suggestions for remediation, if you have them
-
-## Our response commitment
-
-- **Acknowledgement:** within 72 hours of receipt
-- **Initial assessment:** within 7 days
-- **Fix and coordinated disclosure:** we will keep you informed of progress and agree on a disclosure timeline together
+- **Within 48 hours**: acknowledgement of receipt.
+- **Within 7 days**: initial triage and severity assessment.
+- **Within 90 days**: fix released, or a coordinated disclosure date agreed
+  with the reporter. PromptGnome follows a 90-day coordinated-disclosure
+  policy as the default upper bound; severe issues are addressed faster.
 
 ## Scope
 
-In scope for this program:
-
-- Bugs in PII detection that could cause sensitive data to leak to AI provider servers
-- Issues in the encryption, key derivation, or storage of the PII mapping store
-- Content-script isolation problems that could expose internal extension state to the host page
-- Errors in the network call inventory (any unannounced or undocumented network call)
-- Permission escalation or Manifest V3 sandbox bypasses
+In scope:
+- The browser extension source code under `extension/`.
+- The detection engine under `extension/src/detection/`.
+- Build artifacts published to the Chrome Web Store / Firefox Add-ons /
+  Edge Add-ons under the PromptGnome name.
 
 Out of scope:
-
-- Issues in third-party AI providers themselves (ChatGPT, Claude, Gemini, etc.)
-- Vulnerabilities in browser engines or operating systems
-- Social engineering, phishing, or physical access attacks
-- Reports based purely on outdated dependencies without a working exploit
-- Theoretical issues without a demonstrable impact
-
-## Safe harbor
-
-We consider security research conducted in good faith and in accordance with this policy to be authorized. We will not pursue legal action against researchers who:
-
-- Make a good-faith effort to avoid privacy violations and disruption to others
-- Only test against accounts they own or have explicit permission to test
-- Report findings through the channels above and give us reasonable time to respond before any public disclosure
-
-Thank you for helping keep PromptGnome and its users safe.
+- The Pro tier (closed-source).
+- Third-party dependencies — please report those upstream.
+- Issues that require an attacker to already have full control of the
+  victim's device.
