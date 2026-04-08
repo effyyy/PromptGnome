@@ -67,8 +67,7 @@
       "https://x.com/i/grok*",
       "https://copilot.microsoft.com/*",
       "https://www.meta.ai/*",
-      "https://meta.ai/*",
-      "https://api.promptgnome.com/*"
+      "https://meta.ai/*"
     ]
   },
   "pnpm": {

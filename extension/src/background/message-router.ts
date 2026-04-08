@@ -47,6 +47,12 @@ import { loadStoredConfig, applyAdjustments } from "~src/services/detection-conf
 import { generateInstallId, sync as syncTelemetry } from "~src/services/telemetry-sync-port";
 import { getValidJWT } from "~src/services/jwt-manager-port";
 import { incrementScanCount } from "~src/services/telemetry-nudge-port";
+import {
+  handleAnalyticsEvent,
+  handleVerifyEmail,
+  handleVerifyOtp,
+  handleBillingPortal,
+} from "./pro-backend-handlers-port";
 
 const log = createLogger("message-router");
 
@@ -777,119 +783,6 @@ async function handleAnonymizeRequest(
     })
     log.groupEnd()
     return { success: false, error: "Anonymization failed." }
-  }
-}
-
-// -- Analytics / OTP / Billing handlers ------------------------------------
-
-/**
- * Forwards an analytics event to the backend GA4 proxy.
- *
- * @param payload - The analytics event payload with name and params.
- * @returns Success indicator.
- */
-async function handleAnalyticsEvent(
-  payload: { name: string; params: Record<string, string> },
-): Promise<{ success: boolean }> {
-  try {
-    const settings = await getSettings();
-    if (!settings.telemetryEnabled) {
-      return { success: true };
-    }
-
-    const installIdResult = await chrome.storage.local.get(CONFIG_KEYS.TELEMETRY_INSTALL_ID);
-    const clientId = (installIdResult[CONFIG_KEYS.TELEMETRY_INSTALL_ID] as string) || "unknown";
-
-    const response = await fetch("https://api.promptgnome.com/v1/analytics", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        client_id: clientId,
-        events: [{ name: payload.name, params: payload.params }],
-      }),
-      signal: AbortSignal.timeout(5000),
-    });
-
-    return { success: response.ok };
-  } catch {
-    return { success: false };
-  }
-}
-
-/**
- * Sends an OTP verification email for Pro subscription recovery.
- *
- * @param payload - Object containing the user's email address.
- * @returns Whether the email was found in the system.
- */
-async function handleVerifyEmail(
-  payload: { email: string },
-): Promise<{ found: boolean }> {
-  try {
-    const response = await fetch("https://api.promptgnome.com/v1/verify-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: payload.email }),
-      signal: AbortSignal.timeout(10000),
-    });
-    if (!response.ok) return { found: false };
-    return (await response.json()) as { found: boolean };
-  } catch {
-    return { found: false };
-  }
-}
-
-/**
- * Verifies an OTP code for Pro subscription recovery.
- *
- * @param payload - Object containing the user's email and OTP code.
- * @returns Subscription status and customer ID on success, or an error object.
- */
-async function handleVerifyOtp(
-  payload: { email: string; code: string },
-): Promise<{ status: string; customerId: string } | { error: string }> {
-  try {
-    const response = await fetch("https://api.promptgnome.com/v1/verify-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: payload.email, code: payload.code }),
-      signal: AbortSignal.timeout(10000),
-    });
-    if (!response.ok) {
-      const body = (await response.json()) as { error?: string };
-      return { error: body.error || "Verification failed" };
-    }
-    return (await response.json()) as { status: string; customerId: string };
-  } catch {
-    return { error: "Network error — please try again" };
-  }
-}
-
-/**
- * Gets a Paddle billing portal URL for subscription management.
- *
- * @param payload - Object containing the Paddle customer ID and optional subscription ID.
- * @returns A billing portal URL on success, or an error object.
- */
-async function handleBillingPortal(
-  payload: { customerId: string; subscriptionId?: string },
-): Promise<{ url: string } | { error: string }> {
-  try {
-    const response = await fetch("https://api.promptgnome.com/v1/billing-portal", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        customerId: payload.customerId,
-        subscriptionId: payload.subscriptionId,
-      }),
-      signal: AbortSignal.timeout(10000),
-    });
-    if (!response.ok) {
-      return { error: "Failed to open billing portal" };
-    }
-    return (await response.json()) as { url: string };
-  } catch {
-    return { error: "Network error — please try again" };
   }
 }
 

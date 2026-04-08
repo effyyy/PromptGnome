@@ -46,7 +46,7 @@ const makeSettings = (overrides: Partial<Settings> = {}): Settings => ({
   telemetryEnabled: false,
   nerBackendEnabled: true,
   nerBackendConsent: true,
-  nerEndpoint: "https://api.promptgnome.com/v1/analyze",
+  nerEndpoint: "https://ner.test.invalid/v1/analyze",
   ...overrides,
 })
 

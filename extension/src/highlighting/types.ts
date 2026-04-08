@@ -329,7 +329,7 @@ export interface AllowlistEntry {
  *   isProUser: false,
  *   confidenceThreshold: 0.7,
  *   feedbackEnabled: true,
- *   nerEndpoint: "https://api.promptgnome.com/v1/analyze",
+ *   nerEndpoint: "",
  * }
  * ```
  */
@@ -364,7 +364,8 @@ export interface HighlightConfig {
    * Base URL for the NER inference endpoint.
    *
    * Only contacted when `isProUser === true` AND the user has granted
-   * `nerBackendConsent`. Defaults to `"https://api.promptgnome.com/v1/analyze"`.
+   * `nerBackendConsent`. In the Free build this is an empty string and
+   * no backend request is ever made; the Pro build injects its own URL.
    */
   readonly nerEndpoint: string
 }

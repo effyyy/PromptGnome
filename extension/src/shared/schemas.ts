@@ -110,7 +110,7 @@ export const FreeSettingsSchema = z.object({
    * Whether the user has explicitly consented to text transmission for
    * backend NER analysis.
    *
-   * Must be `true` before any text is sent to `api.promptgnome.com`.
+   * Must be `true` before any text is sent to the Pro backend NER service.
    * Defaults to `false` (opt-in only).
    */
   nerBackendConsent: z.boolean().default(false),
@@ -118,9 +118,11 @@ export const FreeSettingsSchema = z.object({
   /**
    * The backend NER service endpoint URL.
    *
-   * Defaults to the production endpoint.  Can be overridden for testing.
+   * In the Free build this defaults to an empty string — no backend NER
+   * requests are made. The Pro build overrides this default at its entry
+   * point. Can also be overridden at runtime for testing.
    */
-  nerEndpoint: z.string().default("https://api.promptgnome.com/v1/analyze"),
+  nerEndpoint: z.string().default(""),
 
   /**
    * Whether real-time highlighting is enabled.
