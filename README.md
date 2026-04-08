@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/brand/banner.svg" alt="PromptGnome — Local-first PII detection for AI chatbots" width="100%" />
+</p>
+
 # PromptGnome
 
 **Local-first PII detection for AI chatbots.** Detects sensitive information in messages you send to ChatGPT, Claude, Gemini, DeepSeek, Perplexity, Grok, Copilot, and Meta AI — before they leave your browser.
@@ -11,6 +15,12 @@ The free tier:
 - Never transmits the text of your messages anywhere except the AI provider you were already going to send them to.
 - Includes regex detection plus optional local NER (using a Hugging-Face-hosted ONNX model loaded into an offscreen document).
 - Supports auto-anonymization with re-hydration of placeholders in AI responses.
+
+## How it works
+
+<p align="center">
+  <img src="assets/brand/how-it-works.svg" alt="How PromptGnome intercepts and scans messages before they reach AI providers" width="100%" />
+</p>
 
 ## Supported providers
 
