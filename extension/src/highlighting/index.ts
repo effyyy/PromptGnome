@@ -46,7 +46,7 @@ const FEEDBACK_MAX_BATCH_SIZE = 20
  *   badgeContainer: document.getElementById('badge-container')!,
  *   isProUser: false,
  *   feedbackEnabled: true,
- *   feedbackEndpoint: "https://api.promptgnome.com/v1/detection-feedback",
+ *   // feedbackEndpoint injected by the Pro build only
  *   onBadgesUpdate: (badges) => renderBadges(badges),
  * }
  * ```
@@ -204,7 +204,7 @@ export function findScrollParent(element: HTMLElement): HTMLElement | null {
  *   badgeContainer: badgeOverlay,
  *   isProUser: true,
  *   feedbackEnabled: true,
- *   feedbackEndpoint: "https://api.promptgnome.com/v1/detection-feedback",
+ *   // feedbackEndpoint injected by the Pro build only
  *   onBadgesUpdate: updateBadgeOverlay,
  * })
  * ```

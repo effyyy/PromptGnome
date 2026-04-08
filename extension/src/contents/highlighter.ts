@@ -22,7 +22,6 @@ import type { PIITypeId } from "~src/detection/types"
 import { PROMO_ACTIVE, HOSTNAME_TO_PROVIDER } from "~src/shared/constants"
 import { findProviderInput } from "~src/utils/provider-input"
 import { createLogger } from "~src/utils/logger"
-import { PRO_BUILD } from "~src/shared/build-flags"
 
 const log = createLogger("highlighter")
 
@@ -264,7 +263,6 @@ async function startPipeline(
       badgeContainer,
       isProUser,
       feedbackEnabled: isProUser,
-      ...(PRO_BUILD ? { feedbackEndpoint: "https://api.promptgnome.com/v1/detection-feedback" } : {}),
       onBadgesUpdate: (badges) => {
         try {
           if (!badgeRoot) {
