@@ -1,0 +1,76 @@
+name: False negative
+description: PromptGnome missed something it should have detected.
+title: "[False negative]: "
+labels: ["false-negative", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Important:** please replace any real personal data with obviously fake equivalents before submitting. Examples of safe synthetic data:
+
+        - Emails: `jane@example.com`
+        - Phone numbers: `555-0100`
+        - Names: `Jane Testperson`
+        - SSNs: `123-45-6789`
+
+        Reports that contain real personal data will be edited or deleted.
+
+  - type: dropdown
+    id: pii-type
+    attributes:
+      label: Which PII type should have been detected?
+      options:
+        - Email
+        - Social Security Number
+        - Credit card number
+        - US phone number
+        - International phone number
+        - IPv4 address
+        - IPv6 address
+        - AWS access key
+        - AWS secret key
+        - GitHub token
+        - Stripe API key
+        - Generic API key or secret
+        - IBAN
+        - US passport number
+        - Driver's license number
+        - ZIP code
+        - Date of birth
+        - Street address
+        - Person name
+        - Organization
+        - Location
+        - Medical term
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Synthetic example that should have triggered detection
+      description: Please use only fake data here.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context (optional)
+      description: What kind of message were you composing? Any context that might help us understand why detection failed?
+
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: no-pii
+    attributes:
+      label: Confirmation
+      options:
+        - label: The example above contains no real personal data.
+          required: true

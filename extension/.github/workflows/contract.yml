@@ -1,0 +1,51 @@
+name: API Contract
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "promptgnome/contracts/**"
+      - "promptgnome/backend/ner-service/app/schemas.py"
+      - "promptgnome/src/services/ner-client.ts"
+      - "promptgnome/src/services/ocr-client.ts"
+      - "promptgnome/tests/contracts/**"
+      - "promptgnome/backend/ner-service/tests/test_contract.py"
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── Backend contract check ──────────────────────────────────────
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install backend dependencies
+        run: pip install pydantic==2.10.6 pytest
+
+      - name: Backend contract test
+        working-directory: promptgnome/backend/ner-service
+        run: python -m pytest tests/test_contract.py -v
+
+      # ── Frontend contract check ─────────────────────────────────────
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: promptgnome/pnpm-lock.yaml
+
+      - name: Install frontend dependencies
+        working-directory: promptgnome
+        run: pnpm install --frozen-lockfile
+
+      - name: Frontend contract test
+        working-directory: promptgnome
+        run: pnpm vitest run tests/contracts/api-contract.test.ts

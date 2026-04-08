@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# AI assistant local config
+.claude/
+.cursor/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.codex-instructions

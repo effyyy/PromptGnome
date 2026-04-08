@@ -1,0 +1,91 @@
+{
+  "name": "promptgnome",
+  "displayName": "PromptGnome",
+  "version": "0.0.0",
+  "description": "Detects sensitive information in your messages to AI chatbots and warns you before sending.",
+  "author": "effyyy <contact@promptgnome.com>",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "build:firefox": "plasmo build --target=firefox-mv3",
+    "build:edge": "plasmo build --target=edge-mv3",
+    "package": "plasmo build && plasmo package",
+    "package:firefox": "plasmo build --target=firefox-mv3 && plasmo package --target=firefox-mv3",
+    "package:edge": "plasmo build --target=edge-mv3 && plasmo package --target=edge-mv3",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "benchmark": "vitest run benchmarks/"
+  },
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "caniuse-lite": "^1.0.30001781",
+    "ibantools": "^4.5.1",
+    "libphonenumber-js": "^1.12.40",
+    "plasmo": "^0.90.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.2.0",
+    "@types/chrome": "^0.0.270",
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@vitest/coverage-v8": "^1.6.0",
+    "ajv": "^8.18.0",
+    "autoprefixer": "^10.4.19",
+    "jsdom": "^24.1.0",
+    "path-browserify": "^1.0.1",
+    "playwright": "^1.59.1",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.4.0",
+    "url": "^0.11.4",
+    "vitest": "^1.6.0"
+  },
+  "manifest": {
+    "content_security_policy": {
+      "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+    },
+    "permissions": [
+      "storage",
+      "sidePanel",
+      "alarms",
+      "offscreen"
+    ],
+    "host_permissions": [
+      "https://chatgpt.com/*",
+      "https://chat.openai.com/*",
+      "https://claude.ai/*",
+      "https://gemini.google.com/*",
+      "https://chat.deepseek.com/*",
+      "https://www.perplexity.ai/*",
+      "https://grok.com/*",
+      "https://x.com/i/grok*",
+      "https://copilot.microsoft.com/*",
+      "https://www.meta.ai/*",
+      "https://meta.ai/*"
+    ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "esbuild",
+      "@parcel/watcher",
+      "lmdb"
+    ]
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/effyyy/PromptGnome.git",
+    "directory": "extension"
+  },
+  "bugs": {
+    "url": "https://github.com/effyyy/PromptGnome/issues"
+  },
+  "homepage": "https://promptgnome.com"
+}

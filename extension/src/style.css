@@ -1,0 +1,72 @@
+/* Design tokens */
+:root {
+  --bg-void: #060a14;
+  --bg-surface: rgba(14,22,40,0.65);
+  --bg-surface-light: rgba(20,30,55,0.8);
+  --text-primary: #e8edf5;
+  --text-secondary: #8a94a8;
+  --text-muted: #5a6478;
+  --danger: #ff6b6b;
+  --danger-soft: rgba(255,107,107,0.15);
+  --danger-text: #fca5a5;
+  --success: #4ade80;
+  --success-soft: rgba(34,197,94,0.1);
+  --warning: #fbbf24;
+  --pro-accent: #ffb347;
+}
+
+/* Animation keyframes */
+@keyframes scan-pulse {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -900; }
+}
+@keyframes scan-pulse-rev {
+  0% { stroke-dashoffset: -900; }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes glow-drift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(10px, 8px); }
+}
+@keyframes node-breathe {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+@keyframes shield-expand {
+  0% { width: 20px; height: 20px; opacity: 0.6; border-color: rgba(0,229,160,0.3); }
+  70% { opacity: 0.1; }
+  100% { width: 500px; height: 500px; opacity: 0; border-color: rgba(0,229,160,0.05); }
+}
+@keyframes icon-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(0,229,160,0.15); }
+  50% { box-shadow: 0 0 20px rgba(0,229,160,0.3), inset 0 0 8px rgba(0,229,160,0.08); }
+}
+@keyframes ring-pulse {
+  0%, 100% { r: 4; opacity: 0.3; }
+  50% { r: 6; opacity: 0.6; }
+}
+@keyframes modal-enter {
+  0% { opacity: 0; transform: translateY(16px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes backdrop-enter {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes badge-pop {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

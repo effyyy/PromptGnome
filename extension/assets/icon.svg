@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="hat" x1="256" y1="40" x2="256" y2="296" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00e5a0"/>
+      <stop offset=".6" stop-color="#009968"/>
+      <stop offset="1" stop-color="#006644"/>
+    </linearGradient>
+    <linearGradient id="fs" x1="144" y1="248" x2="368" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00e5a0" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#00e5a0" stop-opacity=".08"/>
+    </linearGradient>
+    <radialGradient id="eg" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#00e5a0"/>
+      <stop offset="1" stop-color="#00e5a0" stop-opacity=".65"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#060a14"/>
+  <!-- Hat -->
+  <path d="M256 40L128 296h256L256 40z" fill="url(#hat)"/>
+  <rect x="128" y="284" width="256" height="20" rx="10" fill="#0e1628" stroke="rgba(0,229,160,.3)" stroke-width="4"/>
+  <!-- Shield -->
+  <path d="M256 104l-48 28v48c0 32 20 56 48 72 28-16 48-40 48-72v-48l-48-28z" fill="none" stroke="#ffb347" stroke-width="8" opacity=".75"/>
+  <path d="M256 136l-28 16v28c0 20 12 32 28 40 16-8 28-20 28-40v-28l-28-16z" fill="rgba(255,179,71,.06)"/>
+  <!-- Lock -->
+  <rect x="240" y="168" width="32" height="24" rx="6" fill="none" stroke="#ffb347" stroke-width="4.8" opacity=".8"/>
+  <path d="M248 168v-10a8 8 0 0 1 16 0v10" fill="none" stroke="#ffb347" stroke-width="4.8" opacity=".8"/>
+  <!-- Head -->
+  <circle cx="256" cy="380" r="88" fill="#0e1628" stroke="url(#fs)" stroke-width="8"/>
+  <!-- Eyes -->
+  <circle cx="224" cy="364" r="20" fill="url(#eg)"/>
+  <circle cx="288" cy="364" r="20" fill="url(#eg)"/>
+  <circle cx="230" cy="358" r="7.2" fill="#fff" opacity=".5"/>
+  <circle cx="294" cy="358" r="7.2" fill="#fff" opacity=".5"/>
+  <!-- Nose -->
+  <ellipse cx="256" cy="392" rx="12" ry="10" fill="#162040" stroke="rgba(0,229,160,.18)" stroke-width="4"/>
+  <!-- Smile -->
+  <path d="M228 416c12 16 44 16 56 0" stroke="#00e5a0" stroke-width="7.2" stroke-linecap="round" fill="none" opacity=".65"/>
+  <!-- Beard hints -->
+  <path d="M184 432c16 56 48 80 72 88" stroke="rgba(0,229,160,.1)" stroke-width="4.8" fill="none"/>
+  <path d="M328 432c-16 56-48 80-72 88" stroke="rgba(0,229,160,.1)" stroke-width="4.8" fill="none"/>
+</svg>
