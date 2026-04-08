@@ -14,7 +14,6 @@ import { GlassCard } from "~src/components/ui/GlassCard"
 import { MonoLabel } from "~src/components/ui/MonoLabel"
 import { useSettings, type Settings } from "~src/hooks/useSettings"
 import { PII_CATEGORIES, PII_TYPES, PROMO_ACTIVE } from "~src/shared/constants"
-import { PRO_BUILD } from "~src/shared/build-flags"
 import ProUpgradeCard from "~src/popup/components/ProUpgradeCard-port"
 
 /** PII types grouped by category, derived from the canonical PII_CATEGORIES */
@@ -276,14 +275,14 @@ function SettingsTab() {
           })}
         </div>
 
-        {/* PRO upgrade card for Maximum mode */}
-        {PRO_BUILD && <ProUpgradeCard
-          visible={showMaxUpgrade && !isPro}
+        {/* Pro waitlist card — shown when user picks Maximum mode (Pro is locked) */}
+        <ProUpgradeCard
+          visible={(showMaxUpgrade || settings.detectionMode === "maximum") && !isPro}
           onUpgradeComplete={() => {
             setShowMaxUpgrade(false)
             setDetectionMode("maximum")
           }}
-        />}
+        />
 
         {/* Model status + download button */}
         {settings.detectionMode === "balanced" && (
@@ -478,32 +477,6 @@ function SettingsTab() {
       {/* Pro features hidden until Pro tier goes live */}
       {/* Advanced NER and File Scanning (OCR) cards will be re-enabled
           once payment gating is in place. */}
-
-      {/* Telemetry */}
-      <GlassCard className="transition-shadow hover:shadow-cyber-sm">
-        <MonoLabel className="mb-3">Telemetry</MonoLabel>
-        <div className="flex items-center justify-between py-1.5">
-          <div className="flex-1 min-w-0 mr-3">
-            <div className="text-sm font-sans text-[var(--text-secondary)] font-medium">
-              Share anonymous accuracy data
-            </div>
-            <div className="text-xs font-sans text-[var(--text-muted)] mt-0.5">
-              Helps improve detection. We never collect your messages or PII.
-            </div>
-          </div>
-          <CyanToggle
-            checked={settings.telemetryEnabled}
-            onChange={(enabled) => {
-              updateSettings({ telemetryEnabled: enabled })
-              try {
-                chrome.runtime.sendMessage({ type: "TELEMETRY_OPT_IN", enabled })
-              } catch {
-                // non-critical
-              }
-            }}
-          />
-        </div>
-      </GlassCard>
     </div>
   )
 }

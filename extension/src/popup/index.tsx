@@ -20,6 +20,7 @@ import { useSettings } from "~src/hooks/useSettings"
 import { useStats } from "~src/hooks/useStats"
 import AccuracySlider, { type DetectionMode } from "~src/popup/components/AccuracySlider"
 import ModelDownloadProgress from "~src/popup/components/ModelDownloadProgress"
+import ProUpgradeCard from "~src/popup/components/ProUpgradeCard-port"
 import { PRO_BUILD } from "~src/shared/build-flags"
 import { trackSessionStart, trackDailyActive } from "~src/services/analytics-port"
 import SubscriptionStatus from "~src/components/SubscriptionStatus-port"
@@ -157,6 +158,9 @@ function IndexPopup() {
           isPro={isPro}
         />
 
+        {/* Pro waitlist card — appears when user selects Maximum mode */}
+        <ProUpgradeCard visible={detectionMode === "maximum" && !isPro} />
+
         {/* Protection toggle */}
         <ProtectionToggle
           enabled={settings.protectionEnabled}
@@ -195,6 +199,15 @@ function IndexPopup() {
         {/* Branded footer */}
         <div className="pt-1 border-t border-white/[0.04]">
           <div className="flex items-center justify-center gap-2">
+            <a
+              href="https://promptgnome.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[9px] font-mono text-[var(--text-muted)] hover:text-cyber transition-colors"
+            >
+              promptgnome.com
+            </a>
+            <span className="text-[9px] text-[var(--text-muted)]">·</span>
             <span className="text-[9px] font-mono text-[var(--text-muted)]">
               Your AI privacy shield
             </span>
