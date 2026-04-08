@@ -27,11 +27,8 @@ Initial public release of PromptGnome.
 ### Pro tier
 - Pro features (server-side NER, auto-anonymize, re-hydration, file scanning) are gated as **Coming Soon** in 1.0. All users are on the Free tier; the Pro upgrade flow is intentionally disabled until launch.
 
-### Known limitations
-- A small number of edge-case detection scenarios are not yet covered and are tracked for the next release:
-  - SSN false-positives where a phone-shaped pattern overlaps an invalid SSN (e.g., `234-00-5678`).
-  - Luhn-invalid 16-digit numeric strings can still trigger an adjacent generic detector.
-  - IPv4 addresses immediately following a `:` separator (e.g., `server: 203.45.167.12`) are not yet rejected by the context filter.
-  - Stripe `sk_live_` keys embedded in YAML config blocks are not yet matched by the Stripe-specific regex.
+### Bug fixes
+- Restored highlighting and send-time detection on `chat.deepseek.com` after a DeepSeek UI update broke the legacy `#chat-input` selector. The DeepSeek adapter now matches modern composer variants and any `/api/vN/chat/completion(s)` endpoint version.
+- Eliminated several detection edge cases discovered during launch testing: invalid SSNs (bad area / group `00` / serial `0000` / 078-05-1120 / repeated-digit) following an "my SSN is" trigger now fail digit-rule validation; Luhn-invalid 16-digit strings following an "my card is" trigger now fail Luhn validation; Stripe `sk_live_` keys embedded in YAML config blocks are now reported as `STRIPE_KEY` rather than the generic `SECRET` type.
 
 ## [Unreleased]
