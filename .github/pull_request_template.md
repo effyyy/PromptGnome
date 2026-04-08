@@ -1,7 +1,18 @@
-Hi, and thanks for wanting to contribute.
+## Summary
 
-PromptGnome's source code lives in a private repository for now, so we are not able to accept pull requests against this repository. Please see [CONTRIBUTING.md](../blob/main/CONTRIBUTING.md) for more context on why and what we are considering for the future.
+<!-- Briefly describe what this PR changes and why. -->
 
-If you spotted a typo or an error in the documentation, please open an issue and we will fix it quickly. We genuinely appreciate the catch.
+## Test plan
 
-This pull request will be closed automatically.
+- [ ] `pnpm typecheck`
+- [ ] `pnpm test`
+- [ ] `pnpm build`
+- [ ] Manually loaded the unpacked extension and exercised the affected flow
+
+## Checklist
+
+- [ ] Branched from `develop`
+- [ ] Tests added or updated for the change
+- [ ] Synthetic PII only in fixtures (no real names, SSNs, emails)
+- [ ] CLA signed (the bot will prompt on first PR)
+- [ ] Public docs updated if user-visible behavior, permissions, or network calls changed
