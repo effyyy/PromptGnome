@@ -20,7 +20,6 @@ import { useSettings } from "~src/hooks/useSettings"
 import { useStats } from "~src/hooks/useStats"
 import AccuracySlider, { type DetectionMode } from "~src/popup/components/AccuracySlider"
 import ModelDownloadProgress from "~src/popup/components/ModelDownloadProgress"
-import ProUpgradeCard from "~src/popup/components/ProUpgradeCard-port"
 import { PRO_BUILD } from "~src/shared/build-flags"
 import { trackSessionStart, trackDailyActive } from "~src/services/analytics-port"
 import SubscriptionStatus from "~src/components/SubscriptionStatus-port"
@@ -151,15 +150,12 @@ function IndexPopup() {
           {PRO_BUILD && <SubscriptionStatus />}
         </div>
 
-        {/* Detection accuracy mode slider */}
+        {/* Detection accuracy mode slider (renders the waitlist card itself) */}
         <AccuracySlider
           value={detectionMode}
           onChange={handleDetectionModeChange}
           isPro={isPro}
         />
-
-        {/* Pro waitlist card — appears when user selects Maximum mode */}
-        <ProUpgradeCard visible={detectionMode === "maximum" && !isPro} />
 
         {/* Protection toggle */}
         <ProtectionToggle
