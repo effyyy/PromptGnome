@@ -32,3 +32,11 @@ backend/worker/package-lock.json
 # OS
 .DS_Store
 Thumbs.db
+
+# AI assistant local config
+.claude/
+.cursor/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.codex-instructions
