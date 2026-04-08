@@ -9,7 +9,6 @@ import "~src/style.css"
 import { useEffect, useState } from "react"
 
 import AuditLogTab from "./AuditLogTab"
-import FeedbackTab from "./FeedbackTab"
 import SettingsTab from "./SettingsTab"
 import StatsTab from "./StatsTab"
 import { ReportBugButton } from "~src/components/ReportBugDialog"
@@ -19,12 +18,11 @@ import { PRO_BUILD } from "~src/shared/build-flags"
 import TelemetryTransparency from "./TelemetryTransparency-port"
 import { trackSessionStart } from "~src/services/analytics-port"
 
-type TabId = "settings" | "stats" | "feedback" | "audit" | "sharing"
+type TabId = "settings" | "stats" | "audit" | "sharing"
 
 const TABS: Array<{ id: TabId; label: string }> = [
   { id: "settings", label: "Settings" },
   { id: "stats", label: "Stats" },
-  { id: "feedback", label: "Feedback" },
   { id: "audit", label: "Audit Log" },
   ...(PRO_BUILD ? [{ id: "sharing" as TabId, label: "What We Share" }] : []),
 ]
@@ -85,7 +83,6 @@ function SidePanel() {
         <div className="p-4">
           {activeTab === "settings" && <SettingsTab />}
           {activeTab === "stats" && <StatsTab />}
-          {activeTab === "feedback" && <FeedbackTab />}
           {activeTab === "audit" && <AuditLogTab />}
           {PRO_BUILD && activeTab === "sharing" && <TelemetryTransparency />}
         </div>
@@ -94,8 +91,11 @@ function SidePanel() {
         <div className="px-4 pb-4 pt-2 border-t border-white/[0.04]">
           <div className="flex items-center justify-center gap-1.5">
             <ShieldIcon size={14} />
-            <span
-              className="text-[10px] font-sans font-semibold"
+            <a
+              href="https://promptgnome.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] font-sans font-semibold hover:opacity-80 transition-opacity"
               style={{
                 background: "linear-gradient(135deg, #00e5a0, #ffb347)",
                 WebkitBackgroundClip: "text",
@@ -103,7 +103,7 @@ function SidePanel() {
               }}
             >
               PromptGnome
-            </span>
+            </a>
             <span className="text-[9px] font-mono text-[var(--text-muted)]">
               — Your AI privacy shield
             </span>

@@ -8,7 +8,6 @@
 
 import { useEffect, useState } from "react"
 
-import { PRO_BUILD } from "~src/shared/build-flags"
 import ProUpgradeCard from "~src/popup/components/ProUpgradeCard-port"
 
 // ---------------------------------------------------------------------------
@@ -343,7 +342,7 @@ function AccuracySlider({ value, onChange, isPro, className = "" }: AccuracySlid
         </div>
       </div>
 
-      {PRO_BUILD && !isPro && (
+      {!isPro && (
         <ProUpgradeCard
           visible={showUpgrade}
           onUpgradeComplete={() => {

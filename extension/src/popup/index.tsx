@@ -150,7 +150,7 @@ function IndexPopup() {
           {PRO_BUILD && <SubscriptionStatus />}
         </div>
 
-        {/* Detection accuracy mode slider */}
+        {/* Detection accuracy mode slider (renders the waitlist card itself) */}
         <AccuracySlider
           value={detectionMode}
           onChange={handleDetectionModeChange}
@@ -195,6 +195,15 @@ function IndexPopup() {
         {/* Branded footer */}
         <div className="pt-1 border-t border-white/[0.04]">
           <div className="flex items-center justify-center gap-2">
+            <a
+              href="https://promptgnome.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[9px] font-mono text-[var(--text-muted)] hover:text-cyber transition-colors"
+            >
+              promptgnome.com
+            </a>
+            <span className="text-[9px] text-[var(--text-muted)]">·</span>
             <span className="text-[9px] font-mono text-[var(--text-muted)]">
               Your AI privacy shield
             </span>
