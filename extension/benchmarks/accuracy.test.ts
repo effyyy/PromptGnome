@@ -1007,27 +1007,27 @@ describe("accuracy: GENERIC_API_KEY / secret assignment", () => {
     {
       label: "const API_SECRET assignment with high-entropy value",
       text: 'const API_SECRET = "xA3bC9dE2fG7hI1jK5lM8nO4pQ6rS0tU"',
-      expected: [{ type: "SECRET_ASSIGNMENT", valueSubstring: "xA3bC9dE2fG7hI1jK5lM8nO4pQ6rS0tU" }],
+      expected: [{ type: "GENERIC_API_KEY", valueSubstring: "xA3bC9dE2fG7hI1jK5lM8nO4pQ6rS0tU" }],
     },
     {
       label: "env file key with high-entropy value",
       text: "MY_API_KEY=k9Pq2Rs4Tu6Vw8Xy0Za1Bc3De5Fg7Hi9J",
-      expected: [{ type: "ENV_SECRET", valueSubstring: "k9Pq2Rs4Tu6Vw8Xy0Za1Bc3De5Fg7Hi9J" }],
+      expected: [{ type: "GENERIC_API_KEY", valueSubstring: "k9Pq2Rs4Tu6Vw8Xy0Za1Bc3De5Fg7Hi9J" }],
     },
     {
       label: "api_token in config with high-entropy value",
       text: 'api_token: "R4nD0m5tr1ng8CharLongEnough12345XX"',
-      expected: [{ type: "SECRET_ASSIGNMENT", valueSubstring: "R4nD0m5tr1ng8CharLongEnough12345XX" }],
+      expected: [{ type: "GENERIC_API_KEY", valueSubstring: "R4nD0m5tr1ng8CharLongEnough12345XX" }],
     },
     {
       label: "secret_key assignment in Python",
       text: "secret_key = 'mY5eCr3tK3yV4lU3IsH3r3AndItIsLong'",
-      expected: [{ type: "SECRET_ASSIGNMENT", valueSubstring: "mY5eCr3tK3yV4lU3IsH3r3AndItIsLong" }],
+      expected: [{ type: "GENERIC_API_KEY", valueSubstring: "mY5eCr3tK3yV4lU3IsH3r3AndItIsLong" }],
     },
     {
       label: "access_token in JSON",
       text: '{"access_token": "' + "eyJ" + '0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9xyzAbc123"}',
-      expected: [{ type: "SECRET_ASSIGNMENT", valueSubstring: "eyJ0" }],
+      expected: [{ type: "GENERIC_API_KEY", valueSubstring: "eyJ0" }],
     },
     // Negative cases
     {
