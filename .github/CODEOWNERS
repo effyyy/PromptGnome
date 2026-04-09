@@ -1,5 +1,17 @@
-# Code owners for PromptGnome
-# These owners will be the default reviewers for everything in the repo.
-# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
-
+# Default owner for everything
 * @effyyy
+
+# Detection engine — extra scrutiny
+/extension/src/detection/ @effyyy
+
+# Build and release configuration
+/.github/ @effyyy
+/extension/package.json @effyyy
+/extension/plasmo.config.ts @effyyy
+
+# License and governance — protected
+/LICENSE @effyyy
+/NOTICE @effyyy
+/SECURITY.md @effyyy
+/CONTRIBUTING.md @effyyy
+/CODE_OF_CONDUCT.md @effyyy
