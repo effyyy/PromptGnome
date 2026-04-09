@@ -1,70 +1,88 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows: ['CI']
-    types: [completed]
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
 
 jobs:
-  check-tag:
-    name: Verify CI success on a v* tag
+  release-please:
+    name: Open or update Release PR
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
     outputs:
-      tag: ${{ steps.tag.outputs.tag }}
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-          fetch-depth: 0
-      - id: tag
-        run: |
-          TAG=$(git tag --points-at "${{ github.event.workflow_run.head_sha }}" | grep -E '^v[0-9]' | head -n1 || true)
-          if [ -z "$TAG" ]; then
-            echo "No v* tag on this commit — skipping release."
-            exit 0
-          fi
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          config-file: .github/release-please-config.json
+          manifest-file: .github/.release-please-manifest.json
 
-  release:
-    name: Production build + Chrome Web Store zip + GitHub Release
-    needs: check-tag
-    if: needs.check-tag.outputs.tag != ''
+  build-and-publish:
+    name: Build and publish to stores
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created == 'true' }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     defaults:
       run:
         working-directory: extension
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-      - uses: pnpm/action-setup@v4
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
           version: 9
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: 20
+          node-version-file: extension/.nvmrc
           cache: pnpm
           cache-dependency-path: extension/pnpm-lock.yaml
 
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm test
-      - run: pnpm build
-      - run: pnpm package
+      - name: Install
+        run: pnpm install --frozen-lockfile
 
-      - name: Rename zip with version
-        env:
-          TAG: ${{ needs.check-tag.outputs.tag }}
+      - name: Build all targets
         run: |
-          VERSION="${TAG#v}"
-          ZIP=$(ls build/*.zip | head -n1)
-          mv "$ZIP" "build/promptgnome-${VERSION}.zip"
+          pnpm build
+          pnpm build:firefox
+          pnpm build:edge
 
-      - uses: softprops/action-gh-release@v2
+      - name: Package zips
+        run: |
+          pnpm package
+          pnpm package:firefox
+          pnpm package:edge
+          ls -la build/
+
+      - name: Compute SHA256SUMS
+        run: |
+          cd build
+          sha256sum *.zip > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Attach artifacts to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.release-please.outputs.tag_name }}
+        run: |
+          gh release upload "$TAG" build/*.zip build/SHA256SUMS --clobber
+
+      - name: Publish to Chrome / Firefox / Edge
+        uses: PlasmoHQ/bpp@c15984c0a74f452851c605cab46f34d9fd6cb158
         with:
-          tag_name: ${{ needs.check-tag.outputs.tag }}
-          files: extension/build/*.zip
-          generate_release_notes: true
+          keys: ${{ secrets.BPP_KEYS }}
+          chrome-file: extension/build/chrome-mv3-prod.zip
+          firefox-file: extension/build/firefox-mv3-prod.zip
+          edge-file: extension/build/edge-mv3-prod.zip
+          verbose: true
