@@ -1,40 +1,69 @@
 name: CI
 
 on:
-  push:
-    branches: [main, master, develop, oss-import]
   pull_request:
+    branches: [main, develop]
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
 
 jobs:
-  guards:
-    name: Free-build guards (Plan C)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run free-build guards
-        run: bash scripts/free-build-guards.sh
-
-  build:
-    name: Typecheck + test + build
-    needs: guards
+  build-and-test:
+    name: Typecheck, test, build
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: extension
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - name: Checkout
+        uses: actions/checkout@49933ea5288caeca8642d1e84afbd3f7d6820020
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
         with:
           version: 9
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          node-version: 20
+          node-version-file: extension/.nvmrc
           cache: pnpm
           cache-dependency-path: extension/pnpm-lock.yaml
-      - run: pnpm install --frozen-lockfile
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Typecheck
         run: pnpm typecheck
-      - name: Test
-        run: pnpm test
-      - name: Build
+
+      - name: Lint
+        run: pnpm lint || true   # remove `|| true` once lint script exists
+
+      - name: Test with coverage
+        run: pnpm test:coverage
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: coverage-report
+          path: extension/coverage/
+
+      - name: Build (Chrome MV3)
         run: pnpm build
+
+      - name: Build (Firefox MV3)
+        run: pnpm build:firefox
+
+      - name: Build (Edge MV3)
+        run: pnpm build:edge
+
+      - name: Verify free-build guards
+        working-directory: ${{ github.workspace }}
+        run: bash scripts/free-build-guards.sh
+
+      - name: Verify no backend URLs in source
+        working-directory: ${{ github.workspace }}
+        run: bash scripts/check-no-backend-urls.sh
