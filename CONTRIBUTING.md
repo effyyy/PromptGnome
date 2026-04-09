@@ -10,8 +10,15 @@ This project follows the Contributor Covenant. See [`CODE_OF_CONDUCT.md`](./CODE
 ## Contributor License Agreement (CLA)
 
 All non-trivial contributions require a signed Contributor License Agreement
-before they can be merged. The CLA Assistant bot will automatically prompt
-you to sign on your first pull request — it is a one-click process.
+before they can be merged. To sign, read [`CLA.md`](./CLA.md) and then post
+the following comment, **exactly**, on your pull request:
+
+> I have read the CLA Document and I hereby sign the CLA
+
+A GitHub Actions check (`CLA`) will pick up the comment and turn green. The
+comment itself — authored by your verified GitHub account, timestamped, and
+permanently attached to the PR — is the signature record. There is no
+third-party bot, no extra OAuth grant, and no data leaves GitHub.
 
 The CLA assigns the project owner the right to relicense your contribution,
 which is what enables the dual-license model (PolyForm Noncommercial for

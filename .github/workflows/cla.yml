@@ -1,0 +1,67 @@
+name: CLA Check
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: read
+  statuses: write
+
+jobs:
+  cla-check:
+    if: github.event_name == 'pull_request_target' || (github.event.issue.pull_request && github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify CLA signature
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const SIGN_PHRASE = 'I have read the CLA Document and I hereby sign the CLA';
+            const ALLOWLIST = new Set(['effyyy', 'dependabot[bot]', 'release-please[bot]']);
+
+            // Resolve PR + author across both event types.
+            const isComment = context.eventName === 'issue_comment';
+            const prNumber = isComment ? context.payload.issue.number : context.payload.pull_request.number;
+            const pr = (await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            })).data;
+            const author = pr.user.login;
+            const sha = pr.head.sha;
+
+            const setStatus = (state, description) => github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha,
+              state,
+              context: 'CLA',
+              description,
+              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/CLA.md`,
+            });
+
+            if (ALLOWLIST.has(author)) {
+              await setStatus('success', 'Author is allowlisted');
+              return;
+            }
+
+            // Look for the sign phrase in any comment authored by the PR author.
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              per_page: 100,
+            });
+
+            const signed = comments.some(c => c.user.login === author && c.body.trim() === SIGN_PHRASE);
+
+            if (signed) {
+              await setStatus('success', 'CLA signed');
+            } else {
+              await setStatus('pending', `@${author} must comment the CLA sign phrase on this PR`);
+              core.setFailed(`CLA not signed. @${author}: please read https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/CLA.md and comment exactly: "${SIGN_PHRASE}"`);
+            }
