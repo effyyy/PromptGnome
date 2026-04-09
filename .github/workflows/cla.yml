@@ -26,5 +26,3 @@ jobs:
           path-to-document: https://github.com/effyyy/PromptGnome/blob/main/CLA.md
           branch: main
           allowlist: effyyy,dependabot[bot],release-please[bot]
-          remote-organization-name: effyyy
-          remote-repository-name: PromptGnome
