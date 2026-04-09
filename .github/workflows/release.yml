@@ -1,20 +1,35 @@
 name: Release
 
 on:
-  push:
-    tags: ['v*']
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
 
 jobs:
-  guards:
-    name: Free-build guards (Plan C)
+  check-tag:
+    name: Verify CI success on a v* tag
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
-      - run: bash scripts/free-build-guards.sh
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+      - id: tag
+        run: |
+          TAG=$(git tag --points-at "${{ github.event.workflow_run.head_sha }}" | grep -E '^v[0-9]' | head -n1 || true)
+          if [ -z "$TAG" ]; then
+            echo "No v* tag on this commit — skipping release."
+            exit 0
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
   release:
     name: Production build + signed CRX + GitHub Release
-    needs: guards
+    needs: check-tag
+    if: needs.check-tag.outputs.tag != ''
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -23,6 +38,8 @@ jobs:
         working-directory: extension
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
       - uses: pnpm/action-setup@v4
         with:
           version: 9
@@ -48,8 +65,10 @@ jobs:
           printf '%s' "$CRX_SIGNING_KEY" > "$RUNNER_TEMP/promptgnome.pem"
 
       - name: Pack signed CRX
+        env:
+          TAG: ${{ needs.check-tag.outputs.tag }}
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${TAG#v}"
           npx --yes crx3@1.1.3 \
             --keyPath "$RUNNER_TEMP/promptgnome.pem" \
             --crxPath "build/promptgnome-${VERSION}.crx" \
