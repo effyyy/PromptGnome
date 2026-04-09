@@ -35,7 +35,7 @@ function makeBadgePosition(overrides: Partial<BadgePosition> = {}): BadgePositio
 }
 
 function renderBadge(overrides: Partial<PIIBadgeProps> = {}) {
-  const onDismiss = vi.fn<[FeedbackVerdict, PIITypeId?], void>()
+  const onDismiss = vi.fn<(verdict: FeedbackVerdict, correctedType?: PIITypeId) => void>()
   const props: PIIBadgeProps = {
     type: "EMAIL",
     confidence: 0.95,
@@ -352,7 +352,7 @@ describe("PIIBadgeOverlay", () => {
   })
 
   it("should pass the correct matchIndex to onDismiss when a badge fires", () => {
-    const onDismiss = vi.fn<[number, FeedbackVerdict, PIITypeId?], void>()
+    const onDismiss = vi.fn<(matchIndex: number, verdict: FeedbackVerdict, correctedType?: PIITypeId) => void>()
     const badges = [
       makeBadgePosition({ type: "EMAIL", matchIndex: 3, rect: new DOMRect(10, 20, 80, 18) }),
     ]
@@ -367,7 +367,7 @@ describe("PIIBadgeOverlay", () => {
   })
 
   it("should pass matchIndex and correctedType for wrong_type dismissal", () => {
-    const onDismiss = vi.fn<[number, FeedbackVerdict, PIITypeId?], void>()
+    const onDismiss = vi.fn<(matchIndex: number, verdict: FeedbackVerdict, correctedType?: PIITypeId) => void>()
     const badges = [
       makeBadgePosition({ type: "EMAIL", matchIndex: 7, rect: new DOMRect(10, 20, 80, 18) }),
     ]

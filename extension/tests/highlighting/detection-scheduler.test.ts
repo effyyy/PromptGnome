@@ -354,8 +354,8 @@ describe("createDetectionScheduler", () => {
       await flushMicrotasks()
 
       // Verify no "both" or "ner" source matches appeared in any callback
-      const nerMergedCalls = onMatches.mock.calls.filter(
-        ([matches]: [PIIMatch[]]) =>
+      const nerMergedCalls = (onMatches.mock.calls as Array<[PIIMatch[]]>).filter(
+        ([matches]) =>
           matches.some((m: PIIMatch) => m.source === "both" || m.source === "ner"),
       )
       expect(nerMergedCalls).toHaveLength(0)
