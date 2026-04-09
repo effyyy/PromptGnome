@@ -1,0 +1,25 @@
+{
+  "release-type": "node",
+  "packages": {
+    "extension": {
+      "package-name": "promptgnome",
+      "changelog-path": "../CHANGELOG.md",
+      "include-component-in-tag": false,
+      "extra-files": ["package.json"]
+    }
+  },
+  "changelog-sections": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "perf", "section": "Performance" },
+    { "type": "hotfix", "section": "Bug Fixes" },
+    { "type": "refactor", "section": "Refactoring", "hidden": false },
+    { "type": "docs", "section": "Documentation", "hidden": false },
+    { "type": "chore", "hidden": true },
+    { "type": "test", "hidden": true },
+    { "type": "ci", "hidden": true },
+    { "type": "build", "hidden": true }
+  ],
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": false
+}
