@@ -31,7 +31,7 @@
   "devDependencies": {
     "@testing-library/react": "^14.2.0",
     "@types/chrome": "^0.0.270",
-    "@types/node": "^20.11.0",
+    "@types/node": "^25.5.2",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@vitest/coverage-v8": "^1.6.0",
