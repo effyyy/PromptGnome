@@ -27,7 +27,7 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
   release:
-    name: Production build + signed CRX + GitHub Release
+    name: Production build + Chrome Web Store zip + GitHub Release
     needs: check-tag
     if: needs.check-tag.outputs.tag != ''
     runs-on: ubuntu-latest
@@ -53,32 +53,17 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+      - run: pnpm package
 
-      - name: Write CRX signing key
-        env:
-          CRX_SIGNING_KEY: ${{ secrets.CRX_SIGNING_KEY }}
-        run: |
-          if [ -z "$CRX_SIGNING_KEY" ]; then
-            echo "::error::CRX_SIGNING_KEY secret is not set"
-            exit 1
-          fi
-          printf '%s' "$CRX_SIGNING_KEY" > "$RUNNER_TEMP/promptgnome.pem"
-
-      - name: Pack signed CRX
+      - name: Rename zip with version
         env:
           TAG: ${{ needs.check-tag.outputs.tag }}
         run: |
           VERSION="${TAG#v}"
-          npx --yes crx3@1.1.3 \
-            --keyPath "$RUNNER_TEMP/promptgnome.pem" \
-            --crxPath "build/promptgnome-${VERSION}.crx" \
-            build/chrome-mv3-prod
-
-      - name: Shred signing key
-        if: always()
-        run: shred -u "$RUNNER_TEMP/promptgnome.pem" || rm -f "$RUNNER_TEMP/promptgnome.pem"
+          ZIP=$(ls build/*.zip | head -n1)
+          mv "$ZIP" "build/promptgnome-${VERSION}.zip"
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: extension/build/*.crx
+          files: extension/build/*.zip
           generate_release_notes: true
