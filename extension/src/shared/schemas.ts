@@ -177,7 +177,7 @@ export const StatsEntrySchema = z.object({
    * Keys are members of {@link PII_TYPES}; values are non-negative
    * integers.
    */
-  piiDetected: z.record(z.enum(piiTypeKeys), z.number().int().nonnegative()),
+  piiDetected: z.partialRecord(z.enum(piiTypeKeys), z.number().int().nonnegative()),
 
   /** Messages the user chose not to send after a warning. */
   messagesBlocked: z.number().int().nonnegative(),

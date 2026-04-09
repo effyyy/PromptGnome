@@ -6,6 +6,8 @@
  * requiring `any` casts throughout the codebase.
  */
 
+declare module "*.css";
+
 declare namespace chrome {
   namespace sidePanel {
     interface OpenOptions {

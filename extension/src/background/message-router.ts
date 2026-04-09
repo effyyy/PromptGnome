@@ -656,9 +656,9 @@ async function handleTelemetryOptIn(
   try {
     await updateSettings({ telemetryEnabled: enabled });
     if (enabled) {
-      const items = await new Promise<Record<string, unknown>>((resolve) => {
-        chrome.storage.local.get(CONFIG_KEYS.TELEMETRY_INSTALL_ID, resolve);
-      });
+      const items = (await chrome.storage.local.get(
+        CONFIG_KEYS.TELEMETRY_INSTALL_ID,
+      )) as Record<string, unknown>;
       if (!items[CONFIG_KEYS.TELEMETRY_INSTALL_ID]) {
         await new Promise<void>((resolve) => {
           chrome.storage.local.set(
@@ -980,9 +980,10 @@ async function dispatchMessage(
       let useInstallId = false;
 
       try {
-        const items = await new Promise<Record<string, unknown>>((resolve) => {
-          chrome.storage.local.get(["paddleCustomerId", "telemetryInstallId"], resolve);
-        });
+        const items = (await chrome.storage.local.get([
+          "paddleCustomerId",
+          "telemetryInstallId",
+        ])) as Record<string, unknown>;
         const paddleCustomerId = (items["paddleCustomerId"] as string | undefined) ?? null;
         if (paddleCustomerId) {
           identifier = paddleCustomerId;

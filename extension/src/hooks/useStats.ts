@@ -40,12 +40,10 @@ export function useStats() {
   const refresh = useCallback(() => {
     try {
       const key = `stats:${todayKey()}`
-      chrome.storage.local.get(key, (result) => {
-        if (chrome.runtime.lastError) {
-          setLoading(false)
-          return
-        }
-        setStats(result[key] ?? EMPTY_STATS)
+      chrome.storage.local.get(key).then((result) => {
+        setStats((result[key] as StatsEntry | undefined) ?? EMPTY_STATS)
+        setLoading(false)
+      }).catch(() => {
         setLoading(false)
       })
     } catch {

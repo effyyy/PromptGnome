@@ -7,6 +7,9 @@
     "paths": {
       "~*": ["./*"]
     },
-    "baseUrl": "."
+    "baseUrl": ".",
+    "moduleResolution": "bundler",
+    "types": ["chrome", "node"],
+    "ignoreDeprecations": "6.0"
   }
 }
