@@ -70,14 +70,6 @@
       "https://meta.ai/*"
     ]
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@swc/core",
-      "esbuild",
-      "@parcel/watcher",
-      "lmdb"
-    ]
-  },
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
