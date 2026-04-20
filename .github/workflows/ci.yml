@@ -34,7 +34,7 @@ jobs:
           cache-dependency-path: extension/pnpm-lock.yaml
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --config.dangerouslyAllowAllBuilds=true
 
       - name: Typecheck
         run: pnpm typecheck
