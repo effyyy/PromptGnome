@@ -40,9 +40,10 @@ describe('UpgradeBanner', () => {
     });
   });
 
-  it('does not call fetch, XMLHttpRequest, or any network API', () => {
+  it('does not call fetch, XMLHttpRequest, or any network API', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch' as never);
     render(<UpgradeBanner />);
+    await screen.findByText(/Pro features in development/i);
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 });

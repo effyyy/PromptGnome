@@ -29,6 +29,13 @@ vi.stubGlobal("chrome", {
         Object.assign(storageData, data)
         cb?.()
       }),
+      remove: vi.fn((keys: string | string[], cb?: () => void) => {
+        const keyList = Array.isArray(keys) ? keys : [keys]
+        for (const key of keyList) {
+          delete storageData[key]
+        }
+        cb?.()
+      }),
     },
   },
   runtime: { lastError: null as null | { message: string } },
@@ -52,6 +59,7 @@ async function freshAllowlist(): Promise<LocalAllowlist> {
   for (const key of Object.keys(storageData)) {
     delete storageData[key]
   }
+  vi.clearAllMocks()
   const al = new LocalAllowlist()
   await al.load()
   return al
@@ -103,8 +111,8 @@ describe("LocalAllowlist.load", () => {
     expect(al.getEntries()).toHaveLength(0)
   })
 
-  it("should restore previously persisted entries on load", async () => {
-    // Pre-populate storage with a serialised entry
+  it("should delete legacy persisted hashes on load so dismissed PII is not retained at rest", async () => {
+    // Pre-populate storage with a serialised entry from the old persistent design.
     const entry: AllowlistEntry = {
       textHash: "a".repeat(64),
       type: "EMAIL" as PIITypeId,
@@ -116,26 +124,8 @@ describe("LocalAllowlist.load", () => {
     const al = new LocalAllowlist()
     await al.load()
 
-    expect(al.getEntries()).toHaveLength(1)
-    expect(al.getEntries()[0].textHash).toBe("a".repeat(64))
-  })
-
-  it("should handle corrupt (non-array) storage data gracefully", async () => {
-    storageData["pii_allowlist"] = { not: "an array" }
-    const al = new LocalAllowlist()
-    await al.load()
     expect(al.getEntries()).toHaveLength(0)
-  })
-
-  it("should discard entries with missing required fields", async () => {
-    storageData["pii_allowlist"] = [
-      { textHash: "a".repeat(64), type: "EMAIL", dismissedAt: 1000 }, // missing dismissCount
-      { textHash: "b".repeat(64), type: "SSN", dismissedAt: 1000, dismissCount: 1 }, // valid
-    ]
-    const al = new LocalAllowlist()
-    await al.load()
-    expect(al.getEntries()).toHaveLength(1)
-    expect(al.getEntries()[0].type).toBe("SSN")
+    expect(storageData["pii_allowlist"]).toBeUndefined()
   })
 })
 
@@ -244,13 +234,11 @@ describe("LocalAllowlist.dismiss", () => {
     expect(al.getEntries()).toHaveLength(2)
   })
 
-  it("should persist to chrome.storage.local", async () => {
+  it("should keep dismissals in memory only and never persist hashes to chrome.storage.local", async () => {
     const al = await freshAllowlist()
     await al.dismiss("test@example.com", "EMAIL")
 
-    const rawStored = storageData["pii_allowlist"]
-    expect(Array.isArray(rawStored)).toBe(true)
-    expect((rawStored as AllowlistEntry[]).length).toBe(1)
+    expect(storageData["pii_allowlist"]).toBeUndefined()
   })
 })
 
@@ -292,7 +280,7 @@ describe("LocalAllowlist.remove", () => {
     expect(al.getEntries()[0].type).toBe("SSN")
   })
 
-  it("should persist the updated list after removal", async () => {
+  it("should keep removals in memory only and never write hashes to chrome.storage.local", async () => {
     const al = await freshAllowlist()
     await al.dismiss("test@example.com", "EMAIL")
     await al.dismiss("123-45-6789", "SSN")
@@ -300,9 +288,7 @@ describe("LocalAllowlist.remove", () => {
     const emailHash = await hashText("test@example.com")
     await al.remove(emailHash)
 
-    const stored = storageData["pii_allowlist"] as AllowlistEntry[]
-    expect(stored).toHaveLength(1)
-    expect(stored[0].type).toBe("SSN")
+    expect(storageData["pii_allowlist"]).toBeUndefined()
   })
 
   it("should be a no-op when the hash does not exist", async () => {

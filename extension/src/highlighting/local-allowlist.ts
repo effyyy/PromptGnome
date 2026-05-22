@@ -1,12 +1,18 @@
 /**
  * Local false-positive allowlist for the real-time PII highlighting feature.
  *
- * Stores SHA-256 hashes of user-dismissed PII detections in chrome.storage.local
- * so that the same text is never highlighted again for the same entity type.
- * Privacy guarantee: plaintext PII values are NEVER stored — only their hashes.
+ * Keeps SHA-256 hashes of user-dismissed PII detections in memory for the
+ * current extension session so that the same text is not highlighted again
+ * for the same entity type.
+ *
+ * Security rationale: dismissed values can be low-entropy identifiers such as
+ * ZIP codes, SSNs, phone numbers, or dates of birth. Persisting deterministic
+ * hashes of those values at rest makes offline brute-force recovery possible
+ * if extension storage is ever exposed. The allowlist is therefore ephemeral
+ * by design and any legacy persisted entries are deleted on load.
  *
  * Layer: highlighting subsystem / persistence
- * Dependencies: chrome.storage.local (browser API), Web Crypto API
+ * Dependencies: Web Crypto API
  */
 
 import type { AllowlistEntry } from "./types"
@@ -19,7 +25,7 @@ const log = createLogger("local-allowlist")
 // Constants
 // ---------------------------------------------------------------------------
 
-/** chrome.storage.local key under which the allowlist array is persisted. */
+/** Legacy storage key removed during load to purge previously persisted hashes. */
 const STORAGE_KEY = "pii_allowlist"
 
 /** Maximum number of entries retained; oldest (LRU) entries are evicted first. */
@@ -64,11 +70,10 @@ export async function hashText(text: string): Promise<string> {
  * explicitly dismissed as false positives.
  *
  * **Lifecycle:** call {@link load} once after construction before using any
- * other method.  All subsequent reads are served from the in-memory cache;
- * writes are flushed to `chrome.storage.local` via {@link persist}.
+ * other method. All subsequent reads are served from the in-memory cache.
  *
- * **Privacy:** Only SHA-256 hashes are stored.  The original PII text is
- * never written to storage or logs.
+ * **Privacy:** Only SHA-256 hashes are kept in memory. The original PII text
+ * is never written to storage or logs.
  *
  * @example
  * ```ts
@@ -89,11 +94,10 @@ export class LocalAllowlist {
   // -------------------------------------------------------------------------
 
   /**
-   * Loads the persisted allowlist from `chrome.storage.local` into memory.
+   * Clears any legacy persisted allowlist data and starts with an empty
+   * in-memory cache for the current extension session.
    *
-   * Silently recovers from missing or corrupt storage data by starting with
-   * an empty list. Must be called once before using {@link isDismissed} or
-   * {@link dismiss}.
+   * Must be called once before using {@link isDismissed} or {@link dismiss}.
    *
    * @returns A promise that resolves when the in-memory cache is populated.
    *
@@ -105,38 +109,22 @@ export class LocalAllowlist {
    */
   async load(): Promise<void> {
     return new Promise<void>((resolve) => {
+      this.entries = []
       try {
-        if (typeof chrome === "undefined" || !chrome.storage?.local) {
-          // MAIN-world content script — no chrome.storage. Operate in-memory.
-          this.entries = []
+        if (typeof chrome === "undefined" || !chrome.storage?.local?.remove) {
           resolve()
           return
         }
-        chrome.storage.local.get([STORAGE_KEY], (result) => {
+        chrome.storage.local.remove(STORAGE_KEY, () => {
           if (chrome.runtime.lastError) {
-            log.warn("load: chrome.runtime.lastError", {
+            log.warn("load: failed to delete legacy allowlist", {
               message: chrome.runtime.lastError.message,
             })
-            this.entries = []
-            resolve()
-            return
           }
-
-          const raw = result[STORAGE_KEY]
-          if (!Array.isArray(raw)) {
-            this.entries = []
-            resolve()
-            return
-          }
-
-          // Filter to valid-shaped entries; discard corrupted records.
-          this.entries = raw.filter(isValidEntry)
-          log.debug("load: entries loaded", { count: this.entries.length })
           resolve()
         })
       } catch (err) {
         log.error("load: unexpected error", { err: String(err) })
-        this.entries = []
         resolve()
       }
     })
@@ -205,11 +193,9 @@ export class LocalAllowlist {
    * with the oldest {@link AllowlistEntry#dismissedAt} timestamp is evicted
    * (LRU policy).
    *
-   * Changes are persisted to `chrome.storage.local` before the promise resolves.
-   *
    * @param text - The raw PII string to allowlist (never stored; only its hash).
    * @param type - The PII entity type to allowlist.
-   * @returns A promise that resolves when the change has been persisted.
+   * @returns A promise that resolves when the in-memory change is complete.
    * @throws Never — errors are logged and the method resolves silently.
    *
    * @example
@@ -250,7 +236,6 @@ export class LocalAllowlist {
         }
       }
 
-      await this.persist()
       log.debug("dismiss: entry saved", { type, entryCount: this.entries.length })
     } catch (err) {
       log.error("dismiss: unexpected error", { err: String(err) })
@@ -267,10 +252,8 @@ export class LocalAllowlist {
    * All entries matching the given `textHash` are removed regardless of their
    * entity type, making it straightforward to "un-dismiss" a value completely.
    *
-   * Changes are persisted to `chrome.storage.local` before the promise resolves.
-   *
    * @param textHash - The 64-character SHA-256 hex digest to remove.
-   * @returns A promise that resolves when the entry has been removed and persisted.
+   * @returns A promise that resolves when the entry has been removed.
    * @throws Never — errors are logged and the method resolves silently.
    *
    * @example
@@ -285,7 +268,6 @@ export class LocalAllowlist {
       const removed = before - this.entries.length
 
       if (removed > 0) {
-        await this.persist()
         log.debug("remove: entry removed", { removed, entryCount: this.entries.length })
       }
     } catch (err) {
@@ -315,65 +297,6 @@ export class LocalAllowlist {
     return this.entries as readonly AllowlistEntry[]
   }
 
-  // -------------------------------------------------------------------------
-  // persist (private)
-  // -------------------------------------------------------------------------
-
-  /**
-   * Serialises the in-memory entries array to `chrome.storage.local`.
-   *
-   * This is an internal method called by {@link dismiss} and {@link remove}
-   * after every mutation.  It must not be called directly from outside this
-   * class.
-   *
-   * @returns A promise that resolves once the write has been acknowledged.
-   * @throws Never — rejects are converted to logged warnings.
-   */
-  private persist(): Promise<void> {
-    return new Promise<void>((resolve) => {
-      try {
-        if (typeof chrome === "undefined" || !chrome.storage?.local) {
-          resolve()
-          return
-        }
-        const payload: Record<string, AllowlistEntry[]> = {
-          [STORAGE_KEY]: this.entries,
-        }
-        chrome.storage.local.set(payload, () => {
-          if (chrome.runtime.lastError) {
-            log.warn("persist: chrome.runtime.lastError", {
-              message: chrome.runtime.lastError.message,
-            })
-          }
-          resolve()
-        })
-      } catch (err) {
-        log.error("persist: unexpected error", { err: String(err) })
-        resolve()
-      }
-    })
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Private helpers
-// ---------------------------------------------------------------------------
-
-/**
- * Type guard that validates the shape of a raw storage entry.
- *
- * @param value - Unknown value read from storage.
- * @returns `true` when the value conforms to {@link AllowlistEntry}.
- */
-function isValidEntry(value: unknown): value is AllowlistEntry {
-  if (typeof value !== "object" || value === null) return false
-  const v = value as Record<string, unknown>
-  return (
-    typeof v["textHash"] === "string" &&
-    typeof v["type"] === "string" &&
-    typeof v["dismissedAt"] === "number" &&
-    typeof v["dismissCount"] === "number"
-  )
 }
 
 /**

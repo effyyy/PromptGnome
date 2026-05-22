@@ -267,9 +267,9 @@ export interface IncrementScanCountMessage {
 }
 
 /**
- * Sent by the overlay to request the background to anonymize text and store
- * the encrypted mapping.  The background returns the modified request body
- * and serialized mapper so the overlay can set up DOM rehydration.
+ * Sent by the overlay to request the background to anonymize text.
+ * The background returns the modified request body plus the anonymized text
+ * preview used to update the optimistic user bubble.
  */
 export interface AnonymizeRequestMessage {
   readonly type: typeof MESSAGE_TYPES.ANONYMIZE_REQUEST;
@@ -405,10 +405,8 @@ export interface MessageResponseMap {
     data?: {
       /** The modified request body with anonymized text. */
       modifiedBody: string;
-      /** Serialized SessionMapper snapshot for DOM rehydration. */
-      mapperSnapshot: Record<string, string>;
-      /** Session ID under which the mapping is stored. */
-      sessionId: string;
+      /** The placeholder-based text shown in the local optimistic bubble. */
+      anonymizedText: string;
     };
     error?: string;
   };
