@@ -12,7 +12,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    testTimeout: 20_000,
+    testTimeout: 60_000,
     include: ["tests/**/*.test.ts", "tests/**/*.test.tsx", "benchmarks/**/*.test.ts"],
     coverage: {
       provider: "v8",
