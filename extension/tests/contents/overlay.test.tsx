@@ -849,6 +849,37 @@ describe("PIIOverlay — scan request error handling", () => {
     // No response should be sent when messageText is missing
     expect(respondCalls).toHaveLength(0);
   });
+
+  it("should ignore outbound messages from another origin", async () => {
+    mockSendMessage.mockResolvedValue(makeScanResultNoMatches());
+
+    render(<PIIOverlay />);
+
+    await act(async () => {
+      window.dispatchEvent(
+        new MessageEvent("message", {
+          data: {
+            __piiShield: true,
+            channel: "pii-shield:outbound",
+            messageText: "test@example.com",
+            provider: "CHATGPT",
+            requestId: "req-evil-origin",
+          },
+          origin: "https://evil.example",
+          source: window,
+        })
+      );
+    });
+
+    expect(mockSendMessage).not.toHaveBeenCalledWith(
+      expect.objectContaining({ type: "SCAN_REQUEST" }),
+    );
+
+    const respondCalls = postMessageSpy.mock.calls.filter(
+      (args) => (args[0] as Record<string, unknown>)?.__piiShield === true && (args[0] as Record<string, unknown>)?.channel === "pii-shield:response"
+    );
+    expect(respondCalls).toHaveLength(0);
+  });
 });
 
 describe("PIIOverlay — pre-mount request buffering", () => {

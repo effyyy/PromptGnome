@@ -4,15 +4,16 @@ on:
   issues:
     types: [opened]
 
-permissions:
-  issues: write
+permissions: read-all
 
 jobs:
   remind:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       - name: Post reminder comment
-        uses: actions/github-script@v9
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
         with:
           script: |
             const body = [

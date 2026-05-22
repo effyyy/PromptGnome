@@ -3,7 +3,7 @@
   "packages": {
     "extension": {
       "package-name": "promptgnome",
-      "changelog-path": "../CHANGELOG.md",
+      "changelog-path": "CHANGELOG.md",
       "include-component-in-tag": false,
       "extra-files": ["package.json"]
     }

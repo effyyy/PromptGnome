@@ -22,6 +22,10 @@ import type { PIITypeId } from "~src/detection/types"
 import { PROMO_ACTIVE, HOSTNAME_TO_PROVIDER } from "~src/shared/constants"
 import { findProviderInput } from "~src/utils/provider-input"
 import { createLogger } from "~src/utils/logger"
+import {
+  isTrustedWindowMessage,
+  postTrustedWindowMessage,
+} from "~src/utils/window-message"
 
 const log = createLogger("highlighter")
 
@@ -575,6 +579,9 @@ function isHighlightingEnabledForProvider(
   }
 
   function handleSettingsMessage(event: MessageEvent): void {
+    if (event.origin !== window.location.origin) return
+    if (!isTrustedWindowMessage(event)) return
+
     const data = event.data as Record<string, unknown>
     if (typeof data !== "object" || data === null) return
     if (data[MSG_NAMESPACE] !== true) return
@@ -593,6 +600,9 @@ function isHighlightingEnabledForProvider(
    * for the DOM/textarea change to propagate.
    */
   function handleRequestSent(event: MessageEvent): void {
+    if (event.origin !== window.location.origin) return
+    if (!isTrustedWindowMessage(event)) return
+
     const data = event.data as Record<string, unknown>
     if (typeof data !== "object" || data === null) return
     if (data[MSG_NAMESPACE] !== true) return
@@ -611,9 +621,8 @@ function isHighlightingEnabledForProvider(
   handlePotentialInput("init")
 
   // Request an immediate settings snapshot from the isolated-world overlay.
-  window.postMessage(
+  postTrustedWindowMessage(
     { [MSG_NAMESPACE]: true, channel: CHANNEL_SETTINGS_REQUEST },
-    "*",
   )
 
   // Fail-open fallback: if no settings snapshot arrives, proceed with defaults.

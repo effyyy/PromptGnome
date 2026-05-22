@@ -30,6 +30,10 @@ import {
   triggerProviderEditButton,
   replaceLatestUserBubbleText,
 } from "~src/utils/provider-input"
+import {
+  isTrustedWindowMessage,
+  postTrustedWindowMessage,
+} from "~src/utils/window-message"
 
 const log = createLogger("overlay")
 
@@ -191,13 +195,12 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function postSettingsSync(settings: unknown): void {
   if (!isRecord(settings)) return
   latestSettingsSnapshot = settings
-  window.postMessage(
+  postTrustedWindowMessage(
     {
       [MSG_NAMESPACE]: true,
       channel: CHANNEL_SETTINGS_SYNC,
       settings,
     },
-    "*",
   )
 }
 
@@ -245,9 +248,8 @@ export function __resetModuleStateForTesting(): void {
 
 /** Sends a response back to the MAIN-world interceptor via postMessage. */
 function sendShieldResponse(payload: Record<string, unknown>): void {
-  window.postMessage(
+  postTrustedWindowMessage(
     { [MSG_NAMESPACE]: true, channel: "pii-shield:response", ...payload },
-    "*"
   )
 }
 
@@ -269,6 +271,9 @@ function isContextValid(): boolean {
  * a response even when the CSUI component fails to mount.
  */
 function handleWindowMessage(event: MessageEvent): void {
+  if (event.origin !== window.location.origin) return
+  if (!isTrustedWindowMessage(event)) return
+
   const data = event.data as Record<string, unknown>
   if (typeof data !== "object" || data === null || data[MSG_NAMESPACE] !== true) {
     return

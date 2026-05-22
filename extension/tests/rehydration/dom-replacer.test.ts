@@ -72,4 +72,27 @@ describe("DomReplacer", () => {
     expect(span).not.toBeNull()
     expect(span.style.background).toContain("rgba")
   })
+
+  it("should ignore response-complete messages from another origin", () => {
+    const mapper = new SessionMapper()
+    mapper.getOrCreatePlaceholder("EMAIL", "test@example.com")
+    container.textContent = "Your email is [EMAIL_1] confirmed."
+
+    const replacer = new DomReplacer()
+    replacer.startObserving(container, mapper)
+    window.dispatchEvent(
+      new MessageEvent("message", {
+        data: {
+          __piiShield: true,
+          channel: "pii-shield:response-complete",
+        },
+        origin: "https://evil.example",
+        source: window,
+      }),
+    )
+    replacer.stopObserving()
+
+    expect(container.textContent).toBe("Your email is [EMAIL_1] confirmed.")
+    expect(container.querySelector("[data-pii-rehydrated]")).toBeNull()
+  })
 })

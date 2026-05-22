@@ -8,6 +8,7 @@
 import { scanForPlaceholders } from "./placeholder-scanner"
 import type { SessionMapper } from "~src/anonymization/session-mapper"
 import { createLogger } from "~src/utils/logger"
+import { isTrustedWindowMessage } from "~src/utils/window-message"
 
 const log = createLogger("dom-replacer")
 
@@ -77,6 +78,9 @@ export class DomReplacer {
 
     this.messageHandler = (event: MessageEvent) => {
       try {
+        if (event.origin !== window.location.origin) return
+        if (!isTrustedWindowMessage(event)) return
+
         const data: unknown = event.data
         if (
           typeof data === "object" &&

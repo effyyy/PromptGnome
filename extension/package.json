@@ -33,7 +33,7 @@
     "@types/node": "^25.6.0",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
-    "@vitest/coverage-v8": "^2.1.9",
+    "@vitest/coverage-v8": "^4.1.7",
     "ajv": "^8.20.0",
     "autoprefixer": "^10.5.0",
     "jsdom": "^29.1.1",
@@ -44,7 +44,8 @@
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
     "url": "^0.11.4",
-    "vitest": "^2.1.9"
+    "vite": "^8.0.14",
+    "vitest": "^4.1.7"
   },
   "manifest": {
     "content_security_policy": {
@@ -72,6 +73,7 @@
     ]
   },
   "license": "SEE LICENSE IN LICENSE",
+  "packageManager": "pnpm@10.33.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/effyyy/PromptGnome.git",
@@ -83,13 +85,26 @@
   "homepage": "https://promptgnome.com",
   "pnpm": {
     "overrides": {
-      "protobufjs": "7.5.8"
+      "protobufjs": "7.5.8",
+      "@parcel/reporter-dev-server": "2.16.4",
+      "content-security-policy-parser": "0.6.0",
+      "esbuild": "0.28.0",
+      "msgpackr": "1.11.9",
+      "svelte": "5.55.9",
+      "tsup": "8.5.1",
+      "vite": "8.0.14",
+      "picomatch@<4.0.0": "2.3.2",
+      "picomatch@>=4.0.0 <4.0.4": "4.0.4",
+      "yaml@>=1.0.0 <2.0.0": "1.10.3",
+      "yaml@>=2.0.0 <2.8.3": "2.9.0",
+      "brace-expansion@>=5.0.0 <5.0.6": "5.0.6"
     },
     "patchedDependencies": {
       "jiti@2.7.0": "patches/jiti@2.7.0.patch",
       "@tailwindcss/oxide@4.3.0": "patches/@tailwindcss__oxide@4.3.0.patch",
       "@tailwindcss/node@4.3.0": "patches/@tailwindcss__node@4.3.0.patch",
-      "tailwindcss@4.3.0": "patches/tailwindcss@4.3.0.patch"
+      "tailwindcss@4.3.0": "patches/tailwindcss@4.3.0.patch",
+      "@parcel/reporter-dev-server@2.16.4": "patches/@parcel__reporter-dev-server@2.16.4.patch"
     }
   }
 }

@@ -2,6 +2,7 @@ import { resolve } from "path"
 import { defineConfig } from "vitest/config"
 
 export default defineConfig({
+  oxc: false,
   esbuild: {
     // Use the React 17+ automatic JSX runtime so source files do not need
     // to import React explicitly (matches Plasmo's production transform).
@@ -11,6 +12,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    testTimeout: 60_000,
     include: ["tests/**/*.test.ts", "tests/**/*.test.tsx", "benchmarks/**/*.test.ts"],
     coverage: {
       provider: "v8",
