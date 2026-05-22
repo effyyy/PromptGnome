@@ -62,7 +62,7 @@ import { config } from "~src/contents/interceptor";
 function makeAdapter(overrides: Record<string, unknown> = {}) {
   return {
     name: "CHATGPT",
-    hostPatterns: [/chatgpt\.com/],
+    hostPatterns: [/^chatgpt\.com$/],
     urlPattern: /\/backend-api\/conversation/,
     extractUserMessage: vi.fn().mockReturnValue("Hello world"),
     extractResponseText: vi.fn().mockReturnValue(null),

@@ -14,6 +14,10 @@ import type { BaseProviderAdapter } from "~src/providers/base-adapter"
 import { getAdapterForUrlWithPageContext } from "~src/providers/registry"
 import { createLogger } from "~src/utils/logger"
 import { parseSSEStream } from "~src/utils/sse-parser"
+import {
+  isTrustedWindowMessage,
+  postTrustedWindowMessage,
+} from "~src/utils/window-message"
 
 export const config: PlasmoCSConfig = {
   matches: [
@@ -155,6 +159,9 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
 
       function handler(evt: MessageEvent): void {
         try {
+          if (evt.origin !== window.location.origin) return
+          if (!isTrustedWindowMessage(evt)) return
+
           const data = evt.data
           if (!isShieldMessage(data)) return
           if (data.channel !== CHANNEL_RESPONSE) return
@@ -260,7 +267,7 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
         provider: adapter.name,
         responseText: fullText,
       }
-      window.postMessage(complete, "*")
+      postTrustedWindowMessage(complete)
       log.info("Response stream fully accumulated — postMessage dispatched", {
         provider: adapter.name,
         chunkCount: chunks.length,
@@ -348,7 +355,7 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
       requestId: requestId.slice(0, 8),
       messageLen: userMessage.length,
     })
-    window.postMessage(outbound, "*")
+    postTrustedWindowMessage(outbound)
 
     const decision = await waitForResponse(requestId)
 
@@ -360,7 +367,7 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
       provider: adapter.name,
       matchCount: decision?.matchCount ?? 0,
     }
-    window.postMessage(scanComplete, "*")
+    postTrustedWindowMessage(scanComplete)
     log.debug("Scan-complete event dispatched", {
       provider: adapter.name,
       matchCount: scanComplete.matchCount,
@@ -372,11 +379,11 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
         requestId: requestId.slice(0, 8),
         timedOut: decision === null,
       })
-      window.postMessage({
+      postTrustedWindowMessage({
         __piiShield: true,
         channel: CHANNEL_REQUEST_SENT,
         provider: adapter.name,
-      }, "*")
+      })
       log.groupEnd()
       return callOriginalAndMaybeTee(request, adapter)
     }
@@ -386,12 +393,12 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
         provider: adapter.name,
         requestId: requestId.slice(0, 8),
       })
-      window.postMessage({
+      postTrustedWindowMessage({
         __piiShield: true,
         channel: CHANNEL_RESTORE_DRAFT,
         provider: adapter.name,
         messageText: userMessage,
-      } satisfies ShieldMessage & { channel: string; provider: string; messageText: string | null }, "*")
+      } satisfies ShieldMessage & { channel: string; provider: string; messageText: string | null })
       log.groupEnd()
       return new OriginalResponse("", { status: 200, statusText: "Blocked by PromptGnome" })
     }
@@ -402,11 +409,11 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
         requestId: requestId.slice(0, 8),
         modifiedBodyLen: decision.modifiedBody.length,
       })
-      window.postMessage({
+      postTrustedWindowMessage({
         __piiShield: true,
         channel: CHANNEL_REQUEST_SENT,
         provider: adapter.name,
-      }, "*")
+      })
       log.groupEnd()
       return callOriginalAndMaybeTee(buildModifiedRequest(request, decision.modifiedBody), adapter)
     }
@@ -620,7 +627,7 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
         requestId,
         originalBody: body,
       }
-      window.postMessage(outbound, "*")
+      postTrustedWindowMessage(outbound)
 
       // Defer the actual send until the overlay decision arrives. XHR allows
       // send() to be called any time after open() — the page is already in an
@@ -634,14 +641,14 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
             provider: adapter.name,
             matchCount: decision?.matchCount ?? 0,
           }
-          window.postMessage(scanComplete, "*")
+          postTrustedWindowMessage(scanComplete)
 
           if (decision === null || decision.action === "proceed") {
-            window.postMessage({
+            postTrustedWindowMessage({
               __piiShield: true,
               channel: CHANNEL_REQUEST_SENT,
               provider: adapter.name,
-            }, "*")
+            })
             origXhrSend.call(this, body as never)
             return
           }
@@ -651,12 +658,12 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
               callId,
               provider: adapter.name,
             })
-            window.postMessage({
+            postTrustedWindowMessage({
               __piiShield: true,
               channel: CHANNEL_RESTORE_DRAFT,
               provider: adapter.name,
               messageText: userMessage,
-            } satisfies ShieldMessage & { channel: string; provider: string; messageText: string | null }, "*")
+            } satisfies ShieldMessage & { channel: string; provider: string; messageText: string | null })
             // send() was never called, so the XHR sits in OPENED state. The
             // page will time out its own request — acceptable feedback for a
             // user-initiated block.
@@ -669,11 +676,11 @@ function isShieldMessage(data: unknown): data is ShieldMessage {
               provider: adapter.name,
               modifiedBodyLen: decision.modifiedBody.length,
             })
-            window.postMessage({
+            postTrustedWindowMessage({
               __piiShield: true,
               channel: CHANNEL_REQUEST_SENT,
               provider: adapter.name,
-            }, "*")
+            })
             origXhrSend.call(this, decision.modifiedBody as never)
             return
           }

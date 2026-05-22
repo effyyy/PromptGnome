@@ -1,0 +1,13 @@
+diff --git a/package.json b/package.json
+index 829d0afd58e81543413133c5ec592a35babef13f..5d0b7d2f9bc04b223914e1323e8002513a25bdcd 100644
+--- a/package.json
++++ b/package.json
+@@ -18,7 +18,7 @@
+   "source": "src/ServerReporter.js",
+   "engines": {
+     "node": ">= 16.0.0",
+-    "parcel": "^2.16.4"
++    "parcel": ">=2.9.3 <3"
+   },
+   "targets": {
+     "main": {

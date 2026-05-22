@@ -64,6 +64,7 @@ done
 # Pre-flight: Node.js
 # ---------------------------------------------------------------------------
 REQUIRED_NODE_MAJOR=18
+PNPM_VERSION=10.33.0
 
 if ! command -v node &>/dev/null; then
   error "Node.js is not installed."
@@ -93,25 +94,16 @@ if ! command -v pnpm &>/dev/null; then
 
   if command -v corepack &>/dev/null; then
     info "Installing via corepack..."
-    corepack enable && corepack prepare pnpm@latest --activate
-  elif command -v npm &>/dev/null; then
-    info "Installing via npm..."
-    npm install -g pnpm
-  elif command -v brew &>/dev/null; then
-    info "Installing via Homebrew..."
-    brew install pnpm
+    corepack enable && corepack prepare "pnpm@${PNPM_VERSION}" --activate
   else
-    error "Cannot auto-install pnpm. Install it manually:"
-    echo "  npm install -g pnpm"
-    echo "  OR: brew install pnpm"
-    echo "  OR: curl -fsSL https://get.pnpm.io/install.sh | sh -"
+    error "Cannot auto-install pnpm because corepack is unavailable. Install pnpm ${PNPM_VERSION} manually:"
+    echo "  corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate"
     exit 1
   fi
 
   # Verify the install succeeded
   if ! command -v pnpm &>/dev/null; then
-    error "pnpm installation failed. Install it manually:"
-    echo "  npm install -g pnpm"
+    error "pnpm installation failed. Install pnpm ${PNPM_VERSION} manually."
     exit 1
   fi
 

@@ -5,14 +5,15 @@ on:
     - cron: "0 6 * * *"
   workflow_dispatch:
 
-permissions:
-  issues: write
+permissions: read-all
 
 jobs:
   stale:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
-      - uses: actions/stale@v10
+      - uses: actions/stale@eb5cf3af3ac0a1aa4c9c45633dd1ae542a27a899
         with:
           only-issue-labels: needs-info
           exempt-issue-labels: provider-breakage,confirmed,priority:high

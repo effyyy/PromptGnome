@@ -19,14 +19,15 @@ apply_protection() {
     "strict": true,
     "contexts": [
       "Typecheck, test, build",
-      "Analyze (javascript-typescript)"
+      "Analyze (javascript-typescript)",
+      "CLA"
     ]
   },
   "enforce_admins": true,
   "required_pull_request_reviews": {
     "dismiss_stale_reviews": true,
     "require_code_owner_reviews": true,
-    "required_approving_review_count": 1,
+    "required_approving_review_count": 2,
     "require_last_push_approval": true
   },
   "required_signatures": true,
