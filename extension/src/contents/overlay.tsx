@@ -29,7 +29,6 @@ import {
   fillProviderDraft,
   triggerProviderEditButton,
   replaceLatestUserBubbleText,
-  isInsideUserBubble,
 } from "~src/utils/provider-input"
 
 const log = createLogger("overlay")
@@ -42,6 +41,7 @@ export const config: PlasmoCSConfig = {
     "https://gemini.google.com/*",
     "https://chat.deepseek.com/*",
     "https://www.perplexity.ai/*",
+    "https://perplexity.ai/*",
     "https://grok.com/*",
     "https://x.com/i/grok*",
     "https://copilot.microsoft.com/*",
@@ -732,11 +732,9 @@ function PIIOverlay() {
       }
 
       const modifiedBody = response.data.modifiedBody as string
-      const mapperSnapshot = response.data.mapperSnapshot as Record<string, string>
       const anonymizedText = (response.data.anonymizedText as string | undefined) ?? ""
       log.info("Step 1/3: Background returned modified body", {
         modifiedBodyLength: modifiedBody.length,
-        placeholderCount: Object.keys(mapperSnapshot).filter((k: string) => !k.startsWith("__counter:")).length,
       })
 
       // Step 1b: Rewrite the optimistic user bubble in the host transcript
@@ -764,103 +762,9 @@ function PIIOverlay() {
         chrome.runtime.sendMessage({ type: "STATS_UPDATE", messagesAnonymized: 1 })
       } catch { /* non-critical */ }
 
-      // Step 3: Set up DOM rehydration by watching for the AI response.
-      // Build a lightweight placeholder→value lookup from the mapper snapshot
-      // returned by the background. No heavy module imports needed.
-      log.info("Step 2/3: Setting up DOM rehydration observer…")
-      const placeholderToValue = new Map<string, string>()
-      for (const [key, value] of Object.entries(mapperSnapshot)) {
-        if (!key.startsWith("__counter:")) {
-          placeholderToValue.set(key, value)
-        }
-      }
-      log.info("Step 2/3: Rehydration map built", {
-        entries: placeholderToValue.size,
+      log.info("Step 2/3: Skipping response rehydration to keep originals out of provider DOM", {
+        provider: pending.provider,
       })
-
-      // Build a regex from the placeholder keys for DOM scanning
-      const placeholderKeys = [...placeholderToValue.keys()]
-      if (placeholderKeys.length > 0) {
-        const escaped = placeholderKeys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-        const regex = new RegExp(escaped.join("|"), "g")
-        const targetNode = document.querySelector("main") ?? document.body
-        const HIGHLIGHT = "background: rgba(0, 255, 200, 0.12); border-radius: 2px; padding: 0 2px;"
-
-        const onResponseComplete = (event: MessageEvent) => {
-          try {
-            const d = event.data
-            if (
-              typeof d === "object" && d !== null &&
-              d["__piiShield"] === true &&
-              d["channel"] === "pii-shield:response-complete"
-            ) {
-              log.info("Step 3/3: Response-complete signal — rehydrating DOM")
-              const rehydrateT0 = performance.now()
-              // Skip user-message bubbles entirely — auto-anonymize and
-              // rehydration are independent features. Rehydration is meant
-              // to restore originals only inside the AI's reply.
-              const providerKey = pending?.provider ?? ""
-              const walker = document.createTreeWalker(
-                targetNode,
-                NodeFilter.SHOW_TEXT,
-                {
-                  acceptNode: (n) =>
-                    isInsideUserBubble(n, providerKey)
-                      ? NodeFilter.FILTER_REJECT
-                      : NodeFilter.FILTER_ACCEPT,
-                },
-              )
-              let node: Text | null
-              let replaced = 0
-              const textNodes: Text[] = []
-              while ((node = walker.nextNode() as Text | null) !== null) {
-                textNodes.push(node)
-              }
-              for (const textNode of textNodes) {
-                const text = textNode.textContent
-                if (!text) continue
-                regex.lastIndex = 0
-                if (!regex.test(text)) continue
-                regex.lastIndex = 0
-
-                const fragment = document.createDocumentFragment()
-                let lastIdx = 0
-                let m: RegExpExecArray | null
-                while ((m = regex.exec(text)) !== null) {
-                  if (m.index > lastIdx) {
-                    fragment.appendChild(document.createTextNode(text.slice(lastIdx, m.index)))
-                  }
-                  const original = placeholderToValue.get(m[0])
-                  if (original !== null && original !== undefined) {
-                    const span = document.createElement("span")
-                    span.textContent = original
-                    span.setAttribute("style", HIGHLIGHT)
-                    span.setAttribute("data-pii-rehydrated", "true")
-                    fragment.appendChild(span)
-                    replaced++
-                  } else {
-                    fragment.appendChild(document.createTextNode(m[0]))
-                  }
-                  lastIdx = m.index + m[0].length
-                }
-                if (lastIdx < text.length) {
-                  fragment.appendChild(document.createTextNode(text.slice(lastIdx)))
-                }
-                textNode.parentNode?.replaceChild(fragment, textNode)
-              }
-              log.info("Rehydration complete", {
-                placeholdersReplaced: replaced,
-                textNodesScanned: textNodes.length,
-                elapsedMs: (performance.now() - rehydrateT0).toFixed(2),
-              })
-              window.removeEventListener("message", onResponseComplete)
-            }
-          } catch {
-            // Never break the host page.
-          }
-        }
-        window.addEventListener("message", onResponseComplete)
-      }
 
       const totalMs = (performance.now() - t0).toFixed(2)
       log.info("Pipeline complete — resolving with MODIFY action", {

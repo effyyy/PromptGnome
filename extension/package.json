@@ -20,29 +20,29 @@
   },
   "dependencies": {
     "@xenova/transformers": "^2.17.2",
-    "caniuse-lite": "^1.0.30001787",
     "ibantools": "^4.5.4",
-    "libphonenumber-js": "^1.12.41",
-    "plasmo": "^0.90.5",
+    "libphonenumber-js": "^1.13.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "4.3.0",
     "@testing-library/react": "^16.3.2",
-    "@types/chrome": "^0.1.40",
+    "@types/chrome": "^0.1.42",
     "@types/node": "^25.6.0",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@vitest/coverage-v8": "^2.1.9",
-    "ajv": "^8.18.0",
-    "autoprefixer": "^10.4.19",
-    "jsdom": "^29.0.2",
+    "ajv": "^8.20.0",
+    "autoprefixer": "^10.5.0",
+    "jsdom": "^29.1.1",
     "path-browserify": "^1.0.1",
+    "plasmo": "^0.90.5",
     "playwright": "^1.59.1",
-    "postcss": "^8.5.9",
-    "tailwindcss": "^3.4.19",
-    "typescript": "^6.0.2",
+    "postcss": "^8.5.14",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3",
     "url": "^0.11.4",
     "vitest": "^2.1.9"
   },
@@ -63,6 +63,7 @@
       "https://gemini.google.com/*",
       "https://chat.deepseek.com/*",
       "https://www.perplexity.ai/*",
+      "https://perplexity.ai/*",
       "https://grok.com/*",
       "https://x.com/i/grok*",
       "https://copilot.microsoft.com/*",
@@ -79,5 +80,16 @@
   "bugs": {
     "url": "https://github.com/effyyy/PromptGnome/issues"
   },
-  "homepage": "https://promptgnome.com"
+  "homepage": "https://promptgnome.com",
+  "pnpm": {
+    "overrides": {
+      "protobufjs": "7.5.8"
+    },
+    "patchedDependencies": {
+      "jiti@2.7.0": "patches/jiti@2.7.0.patch",
+      "@tailwindcss/oxide@4.3.0": "patches/@tailwindcss__oxide@4.3.0.patch",
+      "@tailwindcss/node@4.3.0": "patches/@tailwindcss__node@4.3.0.patch",
+      "tailwindcss@4.3.0": "patches/tailwindcss@4.3.0.patch"
+    }
+  }
 }

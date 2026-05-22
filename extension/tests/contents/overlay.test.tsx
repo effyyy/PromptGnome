@@ -168,6 +168,23 @@ function dispatchRestoreDraft(provider: string) {
 }
 
 /**
+ * Dispatch a pii-shield:response-complete message, mimicking the interceptor.
+ */
+function dispatchResponseComplete(provider: string) {
+  window.dispatchEvent(
+    new MessageEvent("message", {
+      data: {
+        __piiShield: true,
+        channel: "pii-shield:response-complete",
+        provider,
+        responseText: "placeholder response",
+      },
+      origin: window.location.origin,
+    })
+  );
+}
+
+/**
  * Build a successful SCAN_REQUEST response with no matches.
  */
 function makeScanResultNoMatches() {
@@ -457,6 +474,56 @@ describe("PIIOverlay — warn mode", () => {
     expect(respondCalls).toHaveLength(1);
     // Falls back to "proceed" when adapter is unavailable in test environment
     expect((respondCalls[0][0] as Record<string, unknown>).action).toBe("proceed");
+  });
+
+  it("should not rehydrate original PII back into the provider DOM after auto-anonymize", async () => {
+    mockSendMessage
+      .mockResolvedValueOnce(makeScanResultWithMatches([makeMatch()], "warn"))
+      .mockResolvedValueOnce({
+        success: true,
+        data: {
+          modifiedBody: '{"messages":["[EMAIL_1]"]}',
+          mapperSnapshot: {
+            "[EMAIL_1]": "test@example.com",
+            "__counter:EMAIL": "1",
+          },
+          sessionId: "tab:123",
+          anonymizedText: "[EMAIL_1]",
+        },
+      });
+
+    const main = document.createElement("main");
+    main.innerHTML = '<div id="assistant-reply">Reply includes [EMAIL_1]</div>';
+    document.body.appendChild(main);
+
+    render(<PIIOverlay />);
+
+    await act(async () => {
+      dispatchOutbound({
+        messageText: "test@example.com",
+        provider: "CHATGPT",
+        requestId: "req-051",
+        originalBody: '{"messages":["test@example.com"]}',
+      });
+    });
+
+    await act(async () => {
+      screen.getByTestId("btn-auto-anonymize").click();
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("pii-warning")).toBeNull();
+    });
+
+    await act(async () => {
+      dispatchResponseComplete("CHATGPT");
+    });
+
+    expect(main.textContent).toContain("[EMAIL_1]");
+    expect(main.textContent).not.toContain("test@example.com");
+    expect(main.querySelector("[data-pii-rehydrated='true']")).toBeNull();
+
+    main.remove();
   });
 
   it("should send a LOG_USER_DECISION message with action=dismissed on Send Anyway", async () => {

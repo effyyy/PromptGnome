@@ -11,14 +11,24 @@ import { detectPII } from "~src/detection/regex-engine"
 
 describe("latency benchmarks", () => {
   const sizes = [50, 200, 500, 2000]
+  const measureRuns = (text: string, runs = 100): number[] => {
+    const samples: number[] = []
+    for (let i = 0; i < 10; i++) detectPII(text)
+    for (let i = 0; i < runs; i++) {
+      const start = performance.now()
+      detectPII(text)
+      samples.push(performance.now() - start)
+    }
+    samples.sort((a, b) => a - b)
+    return samples
+  }
+
+  const p95 = (samples: number[]) => samples[Math.ceil(0.95 * samples.length) - 1]
 
   for (const size of sizes) {
     it(`regex detection on ${size}-char text should complete under 50ms`, () => {
       const text = "a".repeat(size)
-      const start = performance.now()
-      detectPII(text)
-      const elapsed = performance.now() - start
-      expect(elapsed).toBeLessThan(50)
+      expect(p95(measureRuns(text))).toBeLessThan(50)
     })
   }
 
@@ -26,21 +36,15 @@ describe("latency benchmarks", () => {
     const text =
       "My email is janedoe@protonmail.com and my SSN is 123-45-6789. " +
       "Call me at (800) 555-0199. My card is 4532015112830366."
-    const runs: number[] = []
-    for (let i = 0; i < 100; i++) {
-      const start = performance.now()
-      detectPII(text)
-      runs.push(performance.now() - start)
-    }
-    runs.sort((a, b) => a - b)
-    const p95 = runs[Math.ceil(0.95 * runs.length) - 1]
+    const runs = measureRuns(text, 100)
+    const value = p95(runs)
     console.log(
       `\n  p50=${runs[Math.ceil(0.5 * runs.length) - 1].toFixed(2)}ms` +
-        `  p95=${p95.toFixed(2)}ms` +
+        `  p95=${value.toFixed(2)}ms` +
         `  p99=${runs[Math.ceil(0.99 * runs.length) - 1].toFixed(2)}ms` +
         `  max=${runs[runs.length - 1].toFixed(2)}ms`
     )
-    expect(p95).toBeLessThan(10)
+    expect(value).toBeLessThan(10)
   })
 
   it("regex detection on 5000-char text with embedded PII should complete under 200ms", () => {
@@ -103,17 +107,11 @@ describe("latency benchmarks", () => {
   })
 
   it("empty string should complete in under 5ms", () => {
-    const start = performance.now()
-    detectPII("")
-    const elapsed = performance.now() - start
-    expect(elapsed).toBeLessThan(5)
+    expect(p95(measureRuns(""))).toBeLessThan(5)
   })
 
   it("whitespace-only string should complete in under 5ms", () => {
-    const start = performance.now()
-    detectPII("   \n\t  ")
-    const elapsed = performance.now() - start
-    expect(elapsed).toBeLessThan(5)
+    expect(p95(measureRuns("   \n\t  "))).toBeLessThan(5)
   })
 
   it("text with no PII should be as fast as text with PII", () => {

@@ -31,7 +31,6 @@ import { logDetection } from "~src/services/audit-logger";
 import { detectWithNER } from "~src/detection/ner-engine";
 import { getLocalNERStatusForMode, preloadLocalNER } from "~src/services/local-ner-client";
 import { SessionMapper } from "~src/anonymization/session-mapper";
-import { EncryptedMappingStore } from "~src/anonymization/encrypted-store";
 import { anonymizeText } from "~src/anonymization/anonymizer";
 import { getAdapterForHostname } from "~src/providers/registry";
 import { PRO_BUILD } from "~src/shared/build-flags";
@@ -714,15 +713,14 @@ async function handleTelemetrySyncNow(): Promise<MessageRouterResponse> {
 // -- Anonymize handler ------------------------------------------------------
 
 /**
- * Handles ANONYMIZE_REQUEST: anonymizes PII in user text, replaces the
- * message in the request body using the provider adapter, and stores the
- * encrypted mapping in IndexedDB.
+ * Handles ANONYMIZE_REQUEST: anonymizes PII in user text and replaces the
+ * message in the request body using the provider adapter.
  *
  * @param text         - The raw user message text.
  * @param matches      - Detected PII matches to anonymize.
  * @param provider     - The AI provider name (for adapter lookup).
  * @param originalBody - The raw request body string (JSON).
- * @returns The modified body, serialized mapper, and session ID.
+ * @returns The modified body and anonymized text preview.
  */
 async function handleAnonymizeRequest(
   text: string,
@@ -759,14 +757,6 @@ async function handleAnonymizeRequest(
     }
     log.info("Request body modified", { modifiedBodyLength: modifiedBody.length })
 
-    const sessionId = `tab:${Date.now()}`
-    const store = new EncryptedMappingStore()
-    await store.init()
-    await store.store(sessionId, mapper)
-    log.info("Mapping encrypted and stored", { sessionId })
-
-    const mapperSnapshot = mapper.toSerializable()
-
     log.info("Anonymization complete", {
       totalMs: (performance.now() - t0).toFixed(2),
     })
@@ -774,7 +764,7 @@ async function handleAnonymizeRequest(
 
     return {
       success: true,
-      data: { modifiedBody, mapperSnapshot, sessionId, anonymizedText },
+      data: { modifiedBody, anonymizedText },
     }
   } catch (err) {
     log.error("Anonymization handler failed", {

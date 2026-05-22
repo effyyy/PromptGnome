@@ -238,7 +238,7 @@ async function ensureMainWorldScripts(): Promise<void> {
       {
         id: HIGHLIGHTER_ID,
         js: [highlighterPath],
-        matches: PROVIDER_MATCHES.filter((m) => m !== "https://perplexity.ai/*"),
+        matches: PROVIDER_MATCHES,
         world: "MAIN",
         runAt: "document_idle",
       },
