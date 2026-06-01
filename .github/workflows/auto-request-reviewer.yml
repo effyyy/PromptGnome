@@ -1,0 +1,23 @@
+name: Auto Request Default Reviewer
+
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  request-reviewer:
+    if: github.event.pull_request.user.login != 'effyyy'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request effyyy as reviewer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers" \
+            -f "reviewers[]=effyyy" || true
