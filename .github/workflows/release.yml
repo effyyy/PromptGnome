@@ -15,9 +15,14 @@ jobs:
       issues: write
       pull-requests: write
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
-      version: ${{ steps.release.outputs.version }}
+      # release-please runs in manifest mode (config-file + manifest-file), so
+      # its outputs are namespaced by the package path ("extension"), e.g.
+      # `extension--release_created`. The un-prefixed outputs are empty in this
+      # mode, which previously left the build-and-publish gate always false and
+      # shipped releases with no packaged zips. Read the path-prefixed outputs.
+      release_created: ${{ steps.release.outputs['extension--release_created'] }}
+      tag_name: ${{ steps.release.outputs['extension--tag_name'] }}
+      version: ${{ steps.release.outputs['extension--version'] }}
     steps:
       - name: Run release-please
         id: release
