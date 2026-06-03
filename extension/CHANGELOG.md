@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/effyyy/PromptGnome/compare/v1.0.3...v1.0.4) (2026-06-03)
+
+
+### Bug Fixes
+
+* **ci:** run packaging on release by reading namespaced release-please outputs ([#79](https://github.com/effyyy/PromptGnome/issues/79)) ([32d89aa](https://github.com/effyyy/PromptGnome/commit/32d89aa89abbef902a2c55632f5233efef321ddb))
+
 ## [1.0.3](https://github.com/effyyy/PromptGnome/compare/v1.0.2...v1.0.3) (2026-06-03)
 
 
