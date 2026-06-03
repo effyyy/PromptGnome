@@ -995,7 +995,6 @@ export const HOSTNAME_TO_PROVIDER: ReadonlyMap<string, ProviderName> = new Map([
   ["www.perplexity.ai", PROVIDER_NAMES.PERPLEXITY],
   ["perplexity.ai", PROVIDER_NAMES.PERPLEXITY],
   ["grok.com", PROVIDER_NAMES.GROK],
-  ["x.com", PROVIDER_NAMES.GROK],
   ["copilot.microsoft.com", PROVIDER_NAMES.COPILOT],
   ["www.meta.ai", PROVIDER_NAMES.META_AI],
   ["meta.ai", PROVIDER_NAMES.META_AI],

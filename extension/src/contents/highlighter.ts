@@ -59,7 +59,6 @@ export const config: PlasmoCSConfig = {
     "https://www.perplexity.ai/*",
     "https://perplexity.ai/*",
     "https://grok.com/*",
-    "https://x.com/i/grok*",
     "https://copilot.microsoft.com/*",
     "https://www.meta.ai/*",
     "https://meta.ai/*",

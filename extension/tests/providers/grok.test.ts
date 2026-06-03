@@ -32,11 +32,6 @@ describe("grokAdapter", () => {
       expect(matches).toBe(true);
     });
 
-    it("matches x.com hostname (embedded Grok)", () => {
-      const matches = grokAdapter.hostPatterns.some((p) => p.test("x.com"));
-      expect(matches).toBe(true);
-    });
-
     it("does not match unrelated hostnames", () => {
       const matches = grokAdapter.hostPatterns.some((p) =>
         p.test("chatgpt.com")
@@ -44,9 +39,9 @@ describe("grokAdapter", () => {
       expect(matches).toBe(false);
     });
 
-    it("matches api.x.com hostname", () => {
-      const matches = grokAdapter.hostPatterns.some((p) => p.test("api.x.com"));
-      expect(matches).toBe(true);
+    it("does not match x.com (embedded Grok no longer supported)", () => {
+      const matches = grokAdapter.hostPatterns.some((p) => p.test("x.com"));
+      expect(matches).toBe(false);
     });
 
     it("matches /rest/app-chat/conversations URL (grok.com primary)", () => {

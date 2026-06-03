@@ -29,7 +29,7 @@ The free tier:
 - Gemini (gemini.google.com)
 - DeepSeek (chat.deepseek.com)
 - Perplexity (perplexity.ai)
-- Grok (grok.com, x.com/i/grok)
+- Grok (grok.com)
 - Microsoft Copilot (copilot.microsoft.com)
 - Meta AI (meta.ai)
 

@@ -1,10 +1,8 @@
 /**
  * Grok provider adapter.
  *
- * Handles request/response parsing for grok.com and x.com (under the /i/grok
- * path). Grok uses an OpenAI-like messages-array format with SSE streaming.
- * Both the standalone domain and the embedded X (Twitter) integration are
- * handled by this single adapter via dual host patterns.
+ * Handles request/response parsing for grok.com. Grok uses an OpenAI-like
+ * messages-array format with SSE streaming.
  *
  * Architecture layer: Providers
  */
@@ -14,16 +12,14 @@ import { safeParse, isObject } from "./parse-helpers";
 import { PROVIDER_NAMES } from "~src/shared/constants";
 
 /**
- * Provider adapter for Grok (grok.com and x.com/i/grok).
+ * Provider adapter for Grok (grok.com).
  *
- * Grok is accessible both as a standalone product at grok.com and embedded
- * within X (Twitter) at x.com under the /i/grok path. The API format is
- * OpenAI-like but with Grok-specific field names.
+ * The API format is OpenAI-like but with Grok-specific field names.
  */
 export const grokAdapter: BaseProviderAdapter = {
   name: PROVIDER_NAMES.GROK,
 
-  hostPatterns: [/^grok\.com$/, /^x\.com$/, /^api\.x\.com$/],
+  hostPatterns: [/^grok\.com$/],
 
   urlPattern: /\/(?:rest\/app-chat\/conversations|2\/grok\/add_response\.json|api\/(?:rpc\/)?(?:chat|conversation|completions?))(?:\?|$|\/)/,
 

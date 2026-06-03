@@ -13,18 +13,24 @@ PromptGnome asks for the smallest set of browser permissions it can. This page l
 
 ## Host permissions
 
-We request access only to the specific AI chatbot domains that PromptGnome supports. We do not request access to all websites.
+When you install PromptGnome, your browser asks you to grant "read and change your data" on a list of websites. That wording comes from the browser, not from us, and it sounds broader than what actually happens. Here is what it means in practice and why each domain is on the list.
+
+**Why "read" access?** PromptGnome's whole job is to catch sensitive data (API keys, secrets, personal info) *before* it leaves your machine in a chatbot message. To do that, it has to read the message you are about to send on the supported chatbot page. There is no way to scan text we are not allowed to read.
+
+**Why "change/write" access?** When PromptGnome detects something sensitive, it can redact or replace it in the outgoing request (for example, swapping a real secret for a placeholder). Editing the request before it is sent requires write access to that same page. Without it we could warn you but never actually protect the data.
+
+**Scope is limited to the chatbot domains below.** We request access *only* to the specific AI chatbot domains PromptGnome supports — not to all websites, and not to any other site you visit. Everything happens locally in your browser; see [Data flow](data-flow.md) for what does and does not leave your device.
 
 | Domain | Why we need it |
 |---|---|
-| `chatgpt.com`, `chat.openai.com` | To scan messages on ChatGPT |
-| `claude.ai` | To scan messages on Claude |
-| `gemini.google.com` | To scan messages on Gemini |
-| `chat.deepseek.com` | To scan messages on DeepSeek |
-| `www.perplexity.ai` | To scan messages on Perplexity |
-| `grok.com`, `x.com/i/grok*` | To scan messages on Grok |
-| `copilot.microsoft.com` | To scan messages on Microsoft Copilot |
-| `www.meta.ai` | To scan messages on Meta AI |
+| `chatgpt.com`, `chat.openai.com` | Read your outgoing messages to ChatGPT and redact sensitive data before they are sent |
+| `claude.ai` | Read your outgoing messages to Claude and redact sensitive data before they are sent |
+| `gemini.google.com` | Read your outgoing messages to Gemini and redact sensitive data before they are sent |
+| `chat.deepseek.com` | Read your outgoing messages to DeepSeek and redact sensitive data before they are sent |
+| `www.perplexity.ai`, `perplexity.ai` | Read your outgoing messages to Perplexity and redact sensitive data before they are sent |
+| `grok.com` | Read your outgoing messages to Grok and redact sensitive data before they are sent |
+| `copilot.microsoft.com` | Read your outgoing messages to Microsoft Copilot and redact sensitive data before they are sent |
+| `www.meta.ai`, `meta.ai` | Read your outgoing messages to Meta AI and redact sensitive data before they are sent |
 
 If we add support for a new chatbot in the future, that will appear in our changelog and require a permission update that you must approve.
 

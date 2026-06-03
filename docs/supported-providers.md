@@ -11,7 +11,7 @@ This page tracks the current state of every AI chatbot that PromptGnome supports
 | Gemini | gemini.google.com | stable | 2026-04-07 | The most fragile adapter. Please report any issues quickly. |
 | DeepSeek | chat.deepseek.com | stable | 2026-04-07 | |
 | Perplexity | www.perplexity.ai | stable | 2026-04-07 | Search-augmented queries and direct chat are both supported. |
-| Grok | grok.com, x.com/i/grok | stable | 2026-04-07 | Both standalone and embedded modes. |
+| Grok | grok.com | stable | 2026-04-07 | Standalone grok.com only. Grok embedded inside X (x.com/i/grok) is not supported. |
 | Microsoft Copilot | copilot.microsoft.com | stable | 2026-04-07 | |
 | Meta AI | www.meta.ai | stable | 2026-04-07 | Standalone meta.ai domain only. Embedded Meta AI inside Facebook, Instagram, or WhatsApp web is not supported in this release. |
 
