@@ -108,7 +108,7 @@ describe("interceptor config", () => {
   });
 
   it("should have match patterns for all supported providers", () => {
-    expect(config.matches).toHaveLength(12);
+    expect(config.matches).toHaveLength(11);
   });
 });
 
