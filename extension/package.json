@@ -1,7 +1,7 @@
 {
   "name": "promptgnome",
   "displayName": "PromptGnome",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Detects sensitive information in your messages to AI chatbots and warns you before sending.",
   "author": "effyyy <contact@promptgnome.com>",
   "scripts": {

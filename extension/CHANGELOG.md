@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/effyyy/PromptGnome/compare/v1.0.5...v1.0.6) (2026-06-05)
+
+
+### Bug Fixes
+
+* **ci:** restore @tailwindcss/oxide patch to fix release packaging ([72ab728](https://github.com/effyyy/PromptGnome/commit/72ab7284e05946a8afc1f0a2a2c6e7ee08515afe))
+
 ## [1.0.5](https://github.com/effyyy/PromptGnome/compare/v1.0.4...v1.0.5) (2026-06-05)
 
 
