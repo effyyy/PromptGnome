@@ -23,6 +23,9 @@ patchedDependencies:
   '@parcel/reporter-dev-server@2.16.4':
     hash: c02d9fbd96785e89655ba72d5b7bfbe55935d91a1e9290143df916280f3014f0
     path: patches/@parcel__reporter-dev-server@2.16.4.patch
+  '@tailwindcss/oxide@4.3.0':
+    hash: e699ba4b63673d15045e80d86f7a1996bd9021f9dac1ab97481674c4c338ae2e
+    path: patches/@tailwindcss__oxide@4.3.0.patch
   jiti@2.7.0:
     hash: 763eb2da0547f1d5efe698edf079acedf87971bf6fd94e0888fd4e80279951ff
     path: patches/jiti@2.7.0.patch
@@ -6456,7 +6459,7 @@ snapshots:
   '@tailwindcss/oxide-win32-x64-msvc@4.3.0':
     optional: true
 
-  '@tailwindcss/oxide@4.3.0':
+  '@tailwindcss/oxide@4.3.0(patch_hash=e699ba4b63673d15045e80d86f7a1996bd9021f9dac1ab97481674c4c338ae2e)':
     optionalDependencies:
       '@tailwindcss/oxide-android-arm64': 4.3.0
       '@tailwindcss/oxide-darwin-arm64': 4.3.0
@@ -6475,7 +6478,7 @@ snapshots:
     dependencies:
       '@alloc/quick-lru': 5.2.0
       '@tailwindcss/node': 4.3.0
-      '@tailwindcss/oxide': 4.3.0
+      '@tailwindcss/oxide': 4.3.0(patch_hash=e699ba4b63673d15045e80d86f7a1996bd9021f9dac1ab97481674c4c338ae2e)
       postcss: 8.5.15
       tailwindcss: 4.3.0
 
