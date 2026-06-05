@@ -144,11 +144,15 @@
 }
 
 /*
- * NO @tailwind base — this is intentional.
+ * NO Preflight — this is intentional.
  * Tailwind Preflight resets margins, padding, font sizes, heading styles,
  * list styles, button cursors, and box-sizing on ALL elements in the page.
  * Including it here would break ChatGPT, Claude, Gemini, and every other
  * AI chat UI that the extension runs on.
+ *
+ * Tailwind v4: import only `theme` + `utilities` layers, skip `preflight`.
  */
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@config "../tailwind.config.js";
+@source "../src/**/*.{ts,tsx}";

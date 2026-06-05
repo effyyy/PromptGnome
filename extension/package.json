@@ -100,9 +100,6 @@
     },
     "patchedDependencies": {
       "jiti@2.7.0": "patches/jiti@2.7.0.patch",
-      "@tailwindcss/oxide@4.3.0": "patches/@tailwindcss__oxide@4.3.0.patch",
-      "@tailwindcss/node@4.3.0": "patches/@tailwindcss__node@4.3.0.patch",
-      "tailwindcss@4.3.0": "patches/tailwindcss@4.3.0.patch",
       "@parcel/reporter-dev-server@2.16.4": "patches/@parcel__reporter-dev-server@2.16.4.patch"
     }
   }

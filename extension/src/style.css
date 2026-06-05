@@ -1,3 +1,7 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+@source "../src/**/*.{ts,tsx}";
+
 /* Design tokens */
 :root {
   --bg-void: #060a14;
@@ -67,6 +71,3 @@
   }
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;

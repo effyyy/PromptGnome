@@ -23,18 +23,9 @@ patchedDependencies:
   '@parcel/reporter-dev-server@2.16.4':
     hash: c02d9fbd96785e89655ba72d5b7bfbe55935d91a1e9290143df916280f3014f0
     path: patches/@parcel__reporter-dev-server@2.16.4.patch
-  '@tailwindcss/node@4.3.0':
-    hash: 3e9abeca7f4ec3fb3d91b14b718cc609c312c720eadccf3ece5103a5def250d7
-    path: patches/@tailwindcss__node@4.3.0.patch
-  '@tailwindcss/oxide@4.3.0':
-    hash: e699ba4b63673d15045e80d86f7a1996bd9021f9dac1ab97481674c4c338ae2e
-    path: patches/@tailwindcss__oxide@4.3.0.patch
   jiti@2.7.0:
     hash: 763eb2da0547f1d5efe698edf079acedf87971bf6fd94e0888fd4e80279951ff
     path: patches/jiti@2.7.0.patch
-  tailwindcss@4.3.0:
-    hash: 642ffbd38e8d3c9eaf83f2ba8cbeed128baf32b18112e00aff3f17559aeba28e
-    path: patches/tailwindcss@4.3.0.patch
 
 importers:
 
@@ -103,7 +94,7 @@ importers:
         version: 8.5.15
       tailwindcss:
         specifier: ^4.3.0
-        version: 4.3.0(patch_hash=642ffbd38e8d3c9eaf83f2ba8cbeed128baf32b18112e00aff3f17559aeba28e)
+        version: 4.3.0
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -6419,7 +6410,7 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@tailwindcss/node@4.3.0(patch_hash=3e9abeca7f4ec3fb3d91b14b718cc609c312c720eadccf3ece5103a5def250d7)':
+  '@tailwindcss/node@4.3.0':
     dependencies:
       '@jridgewell/remapping': 2.3.5
       enhanced-resolve: 5.22.0
@@ -6427,7 +6418,7 @@ snapshots:
       lightningcss: 1.32.0
       magic-string: 0.30.21
       source-map-js: 1.2.1
-      tailwindcss: 4.3.0(patch_hash=642ffbd38e8d3c9eaf83f2ba8cbeed128baf32b18112e00aff3f17559aeba28e)
+      tailwindcss: 4.3.0
 
   '@tailwindcss/oxide-android-arm64@4.3.0':
     optional: true
@@ -6465,7 +6456,7 @@ snapshots:
   '@tailwindcss/oxide-win32-x64-msvc@4.3.0':
     optional: true
 
-  '@tailwindcss/oxide@4.3.0(patch_hash=e699ba4b63673d15045e80d86f7a1996bd9021f9dac1ab97481674c4c338ae2e)':
+  '@tailwindcss/oxide@4.3.0':
     optionalDependencies:
       '@tailwindcss/oxide-android-arm64': 4.3.0
       '@tailwindcss/oxide-darwin-arm64': 4.3.0
@@ -6483,10 +6474,10 @@ snapshots:
   '@tailwindcss/postcss@4.3.0':
     dependencies:
       '@alloc/quick-lru': 5.2.0
-      '@tailwindcss/node': 4.3.0(patch_hash=3e9abeca7f4ec3fb3d91b14b718cc609c312c720eadccf3ece5103a5def250d7)
-      '@tailwindcss/oxide': 4.3.0(patch_hash=e699ba4b63673d15045e80d86f7a1996bd9021f9dac1ab97481674c4c338ae2e)
+      '@tailwindcss/node': 4.3.0
+      '@tailwindcss/oxide': 4.3.0
       postcss: 8.5.15
-      tailwindcss: 4.3.0(patch_hash=642ffbd38e8d3c9eaf83f2ba8cbeed128baf32b18112e00aff3f17559aeba28e)
+      tailwindcss: 4.3.0
 
   '@testing-library/dom@10.4.1':
     dependencies:
@@ -8402,7 +8393,7 @@ snapshots:
 
   symbol-tree@3.2.4: {}
 
-  tailwindcss@4.3.0(patch_hash=642ffbd38e8d3c9eaf83f2ba8cbeed128baf32b18112e00aff3f17559aeba28e): {}
+  tailwindcss@4.3.0: {}
 
   tapable@2.3.3: {}
 
