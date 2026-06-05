@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/effyyy/PromptGnome/compare/v1.0.4...v1.0.5) (2026-06-05)
+
+
+### Bug Fixes
+
+* **ui:** restore styling for popup and side panel under Tailwind v4 ([51eefa8](https://github.com/effyyy/PromptGnome/commit/51eefa89c988df30430ae34f4acdb4e000bd2baa))
+
 ## [1.0.4](https://github.com/effyyy/PromptGnome/compare/v1.0.3...v1.0.4) (2026-06-03)
 
 
